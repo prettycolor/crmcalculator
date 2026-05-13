@@ -6,14 +6,12 @@
 <title>okaybabe CRM Audit</title>
 <style>
 /* ═══════════════════════════════════════════════════
-   okaybabe Design Tokens — Warm Zinc (Light Mode)
-   Source: okaybabe™ Design System colors_and_type.css :root (Warm Zinc)
-   Color tokens stored as HSL triplets; use hsl(var(--token)) in CSS & inline styles
-   60% zinc neutrals / 30% surface / 10% purple accent
-   Fonts: National 2 (display ≥20px) · Soehne (body) · JetBrains Mono (mono)
+   okaybabe Design Tokens — Warm Zinc + Obsidian Amethyst
+   Source: okaybabe™ Design System colors_and_type.css
+   Consumption: hsl(var(--token)) · triplets in :root / html.dark
+   Fonts: National 2 · Söhne · JetBrains Mono (unchanged)
    ═══════════════════════════════════════════════════ */
 
-/* — Self-hosted woff2 (paths relative to this file) + local() fallback — */
 @font-face {
   font-family: 'Soehne';
   font-style: normal;
@@ -38,7 +36,6 @@
   src: url('fonts/soehne-halbfett.woff2') format('woff2'),
        local('Soehne-Halbfett'), local('Soehne Halbfett'), local('Soehne-Kraftig'), local('Soehne Kraftig');
 }
-/* National 2: one medium master served at 400 + 500 for display weights */
 @font-face {
   font-family: 'National 2';
   font-style: normal;
@@ -72,20 +69,22 @@
        local('JetBrains Mono'), local('JetBrainsMono-Regular');
 }
 
+/* ─── Warm Zinc (light) :root ─── */
 :root {
-  /* HSL triplets — Warm Zinc canon (okaybabe colors_and_type.css :root) */
   --primary: 263 70% 58%;
   --primary-hover: 263 70% 48%;
-  --primary-foreground: 0 0% 100%;
   --primary-dim: 263 70% 58% / 0.07;
+  --primary-foreground: 0 0% 100%;
   --ring: 263 70% 58%;
 
   --background: 40 20% 98%;
+  --foreground: 240 6% 10%;
+
   --surface: 0 0% 100%;
   --surface-elevated: 0 0% 100%;
   --surface-hover: 240 5% 96%;
+  --card: 0 0% 100%;
 
-  --foreground: 240 6% 10%;
   --muted-foreground: 240 4% 46%;
   --text-tertiary: 240 5% 65%;
   --text-disabled: 240 5% 83%;
@@ -95,37 +94,96 @@
   --border-subtle: 240 5% 96%;
 
   --success: 142 71% 45%;
-  --success-bg: 142 71% 45% / 0.08;
+  --success-bg: 142 71% 45% / 0.12;
+  --success-foreground: 142 64% 22%;
   --warning: 25 95% 53%;
-  --warning-bg: 25 95% 53% / 0.08;
+  --warning-bg: 25 95% 53% / 0.12;
+  --warning-foreground: 25 95% 28%;
   --destructive: 0 72% 51%;
-  --destructive-bg: 0 72% 51% / 0.08;
+  --destructive-bg: 0 72% 51% / 0.12;
+  --destructive-foreground: 0 72% 32%;
   --info: 217 91% 60%;
-  --info-bg: 217 91% 60% / 0.08;
+  --info-bg: 217 91% 60% / 0.1;
 
-  /* Charts — Warm Zinc (okaybabe colors_and_type.css :root) */
   --chart-1: 263 70% 58%;
   --chart-2: 142 71% 45%;
   --chart-3: 25 95% 53%;
   --chart-4: 217 91% 60%;
   --chart-5: 0 72% 51%;
-
-  /* Category score bars — chart roles (no stray hues outside design-system chart palette) */
   --chart-score-high: var(--chart-2);
   --chart-score-mid: var(--chart-3);
   --chart-score-low: var(--chart-5);
 
   --shadow-color: 263 6% 50%;
-  --shadow-sm: 0 1px 2px hsl(var(--shadow-color) / 0.04);
-  --shadow-md: 0 2px 6px hsl(var(--shadow-color) / 0.06), 0 1px 2px hsl(var(--shadow-color) / 0.04);
+
+  --cta-bg: 240 6% 10%;
+  --cta-fg: 40 20% 98%;
+  --cta-muted: 40 20% 98% / 0.72;
+  --cta-border: 258 40% 90% / 0.08;
 
   --radius: 8px;
-  --radius-lg: 12px;
 
   --font-display: 'National 2', 'Inter Tight', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   --font-sans: 'Soehne', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
 }
+
+/* ─── Obsidian Amethyst (dark) ─── */
+html.dark,
+html[data-theme="dark"] {
+  --primary: 258 90% 66%;
+  --primary-hover: 263 70% 71%;
+  --primary-dim: 258 90% 66% / 0.12;
+  --primary-foreground: 0 0% 100%;
+  --ring: 258 90% 66%;
+
+  --background: 240 33% 4%;
+  --foreground: 0 0% 98%;
+
+  --surface: 252 25% 7%;
+  --surface-elevated: 250 30% 12%;
+  --surface-hover: 252 35% 12%;
+  --card: 252 25% 7%;
+
+  --muted-foreground: 240 4% 46%;
+  --text-tertiary: 240 5% 65%;
+  --text-disabled: 240 4% 26%;
+
+  --border: 258 40% 90% / 0.06;
+  --border-strong: 258 40% 90% / 0.12;
+  --border-subtle: 258 40% 90% / 0.03;
+
+  --success: 142 71% 45%;
+  --success-bg: 142 71% 45% / 0.2;
+  --success-foreground: 142 71% 94%;
+  --warning: 33 100% 50%;
+  --warning-bg: 33 100% 50% / 0.18;
+  --warning-foreground: 48 97% 92%;
+  --destructive: 0 84% 60%;
+  --destructive-bg: 0 84% 60% / 0.18;
+  --destructive-foreground: 0 91% 94%;
+  --info: 213 94% 68%;
+  --info-bg: 213 94% 68% / 0.15;
+
+  --chart-1: 258 90% 66%;
+  --chart-2: 142 71% 45%;
+  --chart-3: 33 100% 50%;
+  --chart-4: 213 94% 68%;
+  --chart-5: 0 84% 60%;
+  --chart-score-high: var(--chart-2);
+  --chart-score-mid: var(--chart-3);
+  --chart-score-low: var(--chart-5);
+
+  --shadow-color: 258 30% 10%;
+
+  --cta-bg: 250 30% 12%;
+  --cta-fg: 0 0% 98%;
+  --cta-muted: 240 5% 65%;
+  --cta-border: 258 40% 90% / 0.12;
+}
+
+html { color-scheme: light dark; }
+
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
@@ -137,6 +195,18 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .container {
   max-width: 640px;
   margin: 0 auto;
@@ -144,10 +214,18 @@ body {
 }
 
 /* ── HEADER ── */
-.brand {
-  text-align: center;
+.site-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
   margin-bottom: 32px;
   padding-top: 20px;
+}
+.brand {
+  text-align: left;
+  flex: 1;
+  min-width: 0;
 }
 .brand h1 {
   font-family: var(--font-display);
@@ -162,6 +240,35 @@ body {
   font-size: 13px;
   color: hsl(var(--muted-foreground));
   margin-top: 4px;
+}
+
+.theme-toggle {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin-top: -4px;
+  border-radius: 10px;
+  border: 1px solid hsl(var(--border));
+  background: hsl(var(--surface));
+  color: hsl(var(--foreground));
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+.theme-toggle:hover {
+  background: hsl(var(--surface-hover));
+  border-color: hsl(var(--border-strong));
+}
+.theme-toggle:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+}
+.theme-toggle svg {
+  width: 22px;
+  height: 22px;
+  pointer-events: none;
 }
 
 /* ── PROGRESS BAR ── */
@@ -257,6 +364,7 @@ body {
   border: 1px solid hsl(var(--border));
   border-radius: var(--radius);
   padding: 32px;
+  outline: none;
 }
 .category-label {
   font-family: var(--font-sans);
@@ -296,19 +404,23 @@ body {
   font-family: var(--font-sans);
   font-size: 15px;
   color: hsl(var(--foreground));
-  transition: all 0.15s ease;
+  transition: border-color 0.15s ease, background 0.15s ease;
   text-align: left;
 }
 .answer-btn:hover {
   border-color: hsl(var(--primary));
   background: hsl(var(--primary-dim));
 }
+.answer-btn:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+}
 .answer-btn .dot {
   width: 18px; height: 18px;
   border-radius: 50%;
   border: 2px solid hsl(var(--border));
   flex-shrink: 0;
-  transition: all 0.15s ease;
+  transition: border-color 0.15s ease;
 }
 .answer-btn:hover .dot { border-color: hsl(var(--primary)); }
 
@@ -318,6 +430,7 @@ body {
   border: 1px solid hsl(var(--border));
   border-radius: var(--radius);
   padding: 32px;
+  outline: none;
 }
 .calc-card h2 {
   font-family: var(--font-display);
@@ -349,9 +462,12 @@ body {
   color: hsl(var(--foreground));
   background: hsl(var(--background));
   outline: none;
-  transition: border-color 0.15s;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
-.input-group input:focus { border-color: hsl(var(--primary)); box-shadow: 0 0 0 3px hsl(var(--primary-dim)); }
+.input-group input:focus-visible {
+  border-color: hsl(var(--primary));
+  box-shadow: 0 0 0 3px hsl(var(--primary-dim));
+}
 .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
 /* ── RESULTS ── */
@@ -361,6 +477,7 @@ body {
   border-radius: var(--radius);
   padding: 32px;
   margin-bottom: 16px;
+  outline: none;
 }
 .results-card h2 {
   font-family: var(--font-display);
@@ -410,7 +527,20 @@ body {
   border-radius: 20px;
   display: inline-block;
   letter-spacing: 0.3px;
-  transition: all 0.3s ease;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+.grade-label.grade-excellent,
+.grade-label.grade-good {
+  background: hsl(var(--success-bg));
+  color: hsl(var(--success-foreground));
+}
+.grade-label.grade-needs {
+  background: hsl(var(--warning-bg));
+  color: hsl(var(--warning-foreground));
+}
+.grade-label.grade-critical {
+  background: hsl(var(--destructive-bg));
+  color: hsl(var(--destructive-foreground));
 }
 .category-scores {
   display: flex; flex-direction: column; gap: 14px;
@@ -430,7 +560,13 @@ body {
   border-radius: 4px;
   overflow: hidden;
 }
-.cat-bar { height: 100%; border-radius: 4px; transition: width 0.6s ease; }
+.cat-bar {
+  height: 100%;
+  border-radius: 0 4px 4px 0;
+  border-left: 3px solid hsl(var(--bar-accent, var(--chart-1)));
+  transition: width 0.6s ease;
+  box-sizing: border-box;
+}
 .cat-score-num {
   font-family: var(--font-mono);
   font-size: 13px;
@@ -462,7 +598,7 @@ body {
 }
 .pipe-stat.highlight {
   background: hsl(var(--destructive-bg));
-  border-color: hsl(var(--destructive) / 0.15);
+  border-color: hsl(var(--destructive) / 0.25);
 }
 .pipe-stat.highlight .value { color: hsl(var(--destructive)); }
 
@@ -488,10 +624,11 @@ body {
   line-height: 1.6;
 }
 
-/* ── CTA ── */
+/* ── CTA (explicit tokens, both themes) ── */
 .cta-card {
-  background: hsl(var(--foreground));
-  color: hsl(var(--background));
+  background: hsl(var(--cta-bg));
+  color: hsl(var(--cta-fg));
+  border: 1px solid hsl(var(--cta-border));
   border-radius: var(--radius);
   padding: 32px; text-align: center;
   margin-top: 16px;
@@ -501,11 +638,12 @@ body {
   font-size: 20px; font-weight: 600;
   margin-bottom: 8px;
   letter-spacing: -0.02em;
+  color: hsl(var(--cta-fg));
 }
 .cta-card p {
   font-family: var(--font-sans);
   font-size: 14px;
-  opacity: 0.7;
+  color: hsl(var(--cta-muted));
   margin-bottom: 20px;
 }
 .cta-btn {
@@ -518,9 +656,13 @@ body {
   font-size: 15px; font-weight: 500;
   cursor: pointer;
   text-decoration: none;
-  transition: background 0.15s;
+  transition: background 0.15s ease;
 }
 .cta-btn:hover { background: hsl(var(--primary-hover)); }
+.cta-btn:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 3px;
+}
 
 /* ── PRIMARY BUTTON ── */
 .primary-btn {
@@ -532,10 +674,14 @@ body {
   font-family: var(--font-sans);
   font-size: 16px; font-weight: 500;
   cursor: pointer;
-  transition: background 0.15s;
+  transition: background 0.15s ease;
   margin-top: 24px;
 }
 .primary-btn:hover { background: hsl(var(--primary-hover)); }
+.primary-btn:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+}
 
 /* ── BENCHMARK ── */
 .benchmark {
@@ -547,7 +693,7 @@ body {
   font-family: var(--font-sans);
   font-size: 12px;
   color: hsl(var(--muted-foreground));
-  border: 1px solid hsl(var(--primary) / 0.1);
+  border: 1px solid hsl(var(--primary) / 0.12);
 }
 
 /* ── ANIMATION ── */
@@ -557,125 +703,102 @@ body {
 }
 .fade-in { animation: fadeUp 0.35s ease forwards; }
 
-
-/* ── Focus (keyboard) ── */
-button:focus-visible,
-.answer-btn:focus-visible,
-.primary-btn:focus-visible,
-.cta-btn:focus-visible {
-  outline: 2px solid hsl(var(--ring));
-  outline-offset: 3px;
-}
-
-/* ── Section rhythm ── */
-.progress-wrap {
-  margin-bottom: 28px;
-  padding-bottom: 18px;
-  border-bottom: 1px solid hsl(var(--border-subtle));
-}
-.container {
-  max-width: 640px;
-  margin: 0 auto;
-  padding: 28px 20px 96px;
-}
-
-/* ── Cards — elevation (restrained) ── */
-.intro-card,
-.question-card,
-.calc-card,
-.results-card {
-  box-shadow: var(--shadow-sm);
-  border-radius: var(--radius-lg);
-}
-
-/* ── Touch-friendly targets ── */
-.answer-btn {
-  min-height: 48px;
-  padding: 16px 18px;
-}
-.primary-btn {
-  min-height: 48px;
-  padding: 17px 16px;
-}
-
-/* ── Results density ── */
-.category-scores {
-  gap: 12px;
-}
-.results-card {
-  margin-bottom: 20px;
-}
-.results-card > p.sub {
-  margin-bottom: 20px;
-}
-.overall-score {
-  padding: 24px 0 28px;
-  margin-bottom: 20px;
-}
-
-/* ── Calculator grid (mobile) ── */
-@media (max-width: 520px) {
-  .input-row {
-    grid-template-columns: 1fr;
+@media (prefers-reduced-motion: reduce) {
+  .fade-in {
+    animation: none;
+    opacity: 1;
+    transform: none;
   }
-  .cat-name {
-    width: 118px;
-    font-size: 12px;
+  .progress-fill,
+  .cat-bar,
+  .score-ring,
+  .score-ring .number,
+  .grade-label {
+    transition: none;
   }
-  .cat-score-num {
-    width: 40px;
-    font-size: 12px;
+  .answer-btn,
+  .primary-btn,
+  .cta-btn,
+  .theme-toggle,
+  .input-group input {
+    transition: none;
   }
 }
-
-
 </style>
 </head>
 <body>
 
 <div class="container">
-  <div class="brand">
-    <h1>okay<span>babe</span></h1>
-    <p>CRM Health Audit + Pipeline Calculator</p>
-  </div>
+  <header class="site-header">
+    <div class="brand">
+      <h1>okay<span>babe</span></h1>
+      <p>CRM Health Audit + Pipeline Calculator</p>
+    </div>
+    <button type="button" class="theme-toggle" id="themeToggle" aria-pressed="false" aria-label="Theme: system. Press to use light mode." title="Cycle theme: system, light, dark">
+      <span class="visually-hidden" id="themeToggleText">Theme: system</span>
+      <svg id="themeIconAuto" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <path d="M12 3v2M12 19v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M3 12h2M19 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+        <circle cx="12" cy="12" r="4"/>
+      </svg>
+      <svg id="themeIconLight" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="display:none">
+        <circle cx="12" cy="12" r="5"/>
+        <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+      </svg>
+      <svg id="themeIconDark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="display:none">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      </svg>
+    </button>
+  </header>
 
-  <div class="progress-wrap">
+  <div
+    class="progress-wrap"
+    id="progressWidget"
+    role="progressbar"
+    aria-valuemin="0"
+    aria-valuemax="22"
+    aria-valuenow="0"
+    aria-label="Audit progress"
+    aria-valuetext="Start, step 0 of 22"
+  >
     <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
     <div class="progress-label">
       <span id="progressStep">Start</span>
-      <span id="progressCount"></span>
+      <span id="progressCount">0 / 22</span>
     </div>
   </div>
 
+  <p id="resultsLive" class="visually-hidden" aria-live="polite" aria-atomic="true"></p>
+
+  <main id="main-content">
   <!-- SCREEN: INTRO -->
   <div class="screen active" id="screen-intro">
     <div class="intro-card fade-in">
       <div class="time-badge">Takes 4 minutes</div>
-      <h2>Is your CRM costing you deals?</h2>
+      <h2 tabindex="-1" id="introHeading">Is your CRM costing you deals?</h2>
       <p>Score your sales operations across 5 categories, calculate your pipeline value, and get a personalized action plan.</p>
       <ul class="intro-features">
         <li><span class="check">✓</span> 20-question CRM health scorecard</li>
         <li><span class="check">✓</span> Pipeline value calculator with benchmarks</li>
         <li><span class="check">✓</span> Personalized action plan for your biggest gaps</li>
       </ul>
-      <button class="primary-btn" onclick="startAudit()">Start My CRM Audit</button>
+      <button type="button" class="primary-btn" onclick="startAudit()">Start My CRM Audit</button>
     </div>
   </div>
 
   <!-- SCREEN: QUESTIONS -->
   <div class="screen" id="screen-questions">
-    <div class="question-card fade-in" id="questionCard">
+    <div class="question-card fade-in" id="questionCard" tabindex="-1">
       <div class="category-label" id="catLabel"></div>
       <div class="question-number" id="qNumber"></div>
       <div class="question-text" id="qText"></div>
       <div class="answer-buttons">
-        <button class="answer-btn" onclick="answer(5)">
+        <button type="button" class="answer-btn" onclick="answer(5)">
           <span class="dot"></span> Yes, consistently
         </button>
-        <button class="answer-btn" onclick="answer(3)">
+        <button type="button" class="answer-btn" onclick="answer(3)">
           <span class="dot"></span> Partially or sometimes
         </button>
-        <button class="answer-btn" onclick="answer(0)">
+        <button type="button" class="answer-btn" onclick="answer(0)">
           <span class="dot"></span> No, not really
         </button>
       </div>
@@ -684,45 +807,45 @@ button:focus-visible,
 
   <!-- SCREEN: CALCULATOR -->
   <div class="screen" id="screen-calc">
-    <div class="calc-card fade-in">
-      <h2>Now, your pipeline numbers</h2>
+    <div class="calc-card fade-in" id="calcCard" tabindex="-1">
+      <h2 id="calcHeading">Now, your pipeline numbers</h2>
       <p>Enter 5 numbers. We'll calculate what your pipeline is actually worth — and what you're leaving on the table.</p>
       <div class="input-group">
-        <label>Active deals in your pipeline right now</label>
+        <label for="calcDeals">Active deals in your pipeline right now</label>
         <input type="number" id="calcDeals" placeholder="e.g. 25" inputmode="numeric">
       </div>
       <div class="input-row">
         <div class="input-group">
-          <label>Average deal value ($)</label>
+          <label for="calcDealValue">Average deal value ($)</label>
           <input type="number" id="calcDealValue" placeholder="e.g. 3500" inputmode="numeric">
         </div>
         <div class="input-group">
-          <label>Win rate (%)</label>
+          <label for="calcWinRate">Win rate (%)</label>
           <input type="number" id="calcWinRate" placeholder="e.g. 30" inputmode="numeric">
         </div>
       </div>
       <div class="input-row">
         <div class="input-group">
-          <label>Avg sales cycle (days)</label>
+          <label for="calcCycle">Avg sales cycle (days)</label>
           <input type="number" id="calcCycle" placeholder="e.g. 45" inputmode="numeric">
         </div>
         <div class="input-group">
-          <label>New leads per month</label>
+          <label for="calcLeads">New leads per month</label>
           <input type="number" id="calcLeads" placeholder="e.g. 40" inputmode="numeric">
         </div>
       </div>
       <div class="benchmark">
-        <span>📊</span>
+        <span aria-hidden="true">📊</span>
         <span>Top SMB teams: 40% win rate · 30-day cycle · 60+ leads/month</span>
       </div>
-      <button class="primary-btn" onclick="showResults()">See My Results</button>
+      <button type="button" class="primary-btn" onclick="showResults()">See My Results</button>
     </div>
   </div>
 
   <!-- SCREEN: RESULTS -->
   <div class="screen" id="screen-results">
-    <div class="results-card fade-in">
-      <h2>Your CRM Health Score</h2>
+    <div class="results-card fade-in" id="resultsScoreCard" tabindex="-1">
+      <h2 id="resultsHeading">Your CRM Health Score</h2>
       <p class="sub">Based on your 20 answers across 5 categories</p>
       <div class="overall-score">
         <div class="score-ring" id="scoreRing">
@@ -731,18 +854,18 @@ button:focus-visible,
             <div class="out-of">/ 100</div>
           </div>
         </div>
-        <span class="grade-label" id="gradeLabel"></span>
+        <span class="grade-label" id="gradeLabel" role="status"></span>
       </div>
       <div class="category-scores" id="categoryScores"></div>
     </div>
 
-    <div class="results-card fade-in" id="pipelineCard" style="display:none;">
+    <div class="results-card fade-in" id="pipelineCard" style="display:none;" tabindex="-1">
       <h2>Your Pipeline</h2>
       <p class="sub">What your numbers actually mean</p>
       <div class="pipeline-results" id="pipelineResults"></div>
     </div>
 
-    <div class="results-card fade-in">
+    <div class="results-card fade-in" id="actionPlanCard" tabindex="-1">
       <h2>Your Action Plan</h2>
       <p class="sub">Prioritized by your weakest areas</p>
       <div id="actionPlan"></div>
@@ -751,12 +874,14 @@ button:focus-visible,
     <div class="cta-card fade-in">
       <h3>okaybabe fixes this.</h3>
       <p>The CRM built for how modern sales teams actually work. Join 50+ founding members shaping the product.</p>
-      <a class="cta-btn" href="https://okaybabe.co" target="_blank">Join the Beta</a>
+      <a class="cta-btn" href="https://okaybabe.co" target="_blank" rel="noopener noreferrer">Join the Beta</a>
     </div>
   </div>
+  </main>
 </div>
 
 <script>
+const THEME_KEY = 'crmcalc-theme';
 const questions = [
   { cat: "Data Hygiene", q: "Do you have a process for removing stale or inactive leads?" },
   { cat: "Data Hygiene", q: "Are contact records updated after every meaningful interaction?" },
@@ -793,6 +918,81 @@ const actionRecs = {
 };
 
 let currentQ = 0;
+let themePreference = 'system';
+let mediaQueryDark = null;
+
+function getStoredTheme() {
+  try {
+    const v = localStorage.getItem(THEME_KEY);
+    if (v === 'light' || v === 'dark' || v === 'system') return v;
+  } catch (e) { /* ignore */ }
+  return 'system';
+}
+
+function isEffectiveDark() {
+  if (themePreference === 'dark') return true;
+  if (themePreference === 'light') return false;
+  return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+}
+
+function applyTheme() {
+  const dark = isEffectiveDark();
+  document.documentElement.classList.toggle('dark', dark);
+  document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+  const toggle = document.getElementById('themeToggle');
+  const iconAuto = document.getElementById('themeIconAuto');
+  const iconLight = document.getElementById('themeIconLight');
+  const iconDark = document.getElementById('themeIconDark');
+  const labelEl = document.getElementById('themeToggleText');
+  if (!toggle) return;
+
+  [iconAuto, iconLight, iconDark].forEach(el => { if (el) el.style.display = 'none'; });
+
+  let nextMode;
+  let iconEl = iconAuto;
+  let aria;
+  if (themePreference === 'system') {
+    iconEl = iconAuto;
+    nextMode = 'light';
+    aria = 'Theme: system (matches device). Press to use light mode.';
+    if (labelEl) labelEl.textContent = 'Theme: system';
+  } else if (themePreference === 'light') {
+    iconEl = iconLight;
+    nextMode = 'dark';
+    aria = 'Theme: light. Press to use dark mode.';
+    if (labelEl) labelEl.textContent = 'Theme: light';
+  } else {
+    iconEl = iconDark;
+    nextMode = 'system';
+    aria = 'Theme: dark. Press to use system theme.';
+    if (labelEl) labelEl.textContent = 'Theme: dark';
+  }
+  if (iconEl) iconEl.style.display = '';
+
+  toggle.setAttribute('aria-label', aria);
+  toggle.setAttribute('aria-pressed', dark ? 'true' : 'false');
+}
+
+function cycleTheme() {
+  if (themePreference === 'system') themePreference = 'light';
+  else if (themePreference === 'light') themePreference = 'dark';
+  else themePreference = 'system';
+  try { localStorage.setItem(THEME_KEY, themePreference); } catch (e) { /* ignore */ }
+  applyTheme();
+}
+
+function initTheme() {
+  themePreference = getStoredTheme();
+  applyTheme();
+  if (window.matchMedia) {
+    mediaQueryDark = window.matchMedia('(prefers-color-scheme: dark)');
+    mediaQueryDark.addEventListener('change', () => {
+      if (themePreference === 'system') applyTheme();
+    });
+  }
+  const btn = document.getElementById('themeToggle');
+  if (btn) btn.addEventListener('click', cycleTheme);
+}
 
 function show(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -803,11 +1003,23 @@ function updateProgress(step, total, label) {
   document.getElementById('progressFill').style.width = (step / total * 100) + '%';
   document.getElementById('progressStep').textContent = label;
   document.getElementById('progressCount').textContent = step + ' / ' + total;
+  const w = document.getElementById('progressWidget');
+  if (w) {
+    w.setAttribute('aria-valuenow', String(step));
+    w.setAttribute('aria-valuemax', String(total));
+    w.setAttribute('aria-valuetext', `${label}, step ${step} of ${total}`);
+  }
+}
+
+function focusEl(el) {
+  if (!el || typeof el.focus !== 'function') return;
+  try { el.focus({ preventScroll: true }); } catch (e) { el.focus(); }
 }
 
 function startAudit() {
   show('screen-questions');
   renderQuestion();
+  requestAnimationFrame(() => focusEl(document.getElementById('questionCard')));
 }
 
 function renderQuestion() {
@@ -820,13 +1032,18 @@ function renderQuestion() {
   card.classList.remove('fade-in');
   void card.offsetWidth;
   card.classList.add('fade-in');
+  requestAnimationFrame(() => focusEl(card));
 }
 
 function answer(val) {
   catScores[questions[currentQ].cat] += val;
   currentQ++;
   if (currentQ < 20) { renderQuestion(); }
-  else { updateProgress(21, 22, 'Pipeline Calculator'); show('screen-calc'); }
+  else {
+    updateProgress(21, 22, 'Pipeline Calculator');
+    show('screen-calc');
+    requestAnimationFrame(() => focusEl(document.getElementById('calcCard')));
+  }
 }
 
 function showResults() {
@@ -843,33 +1060,54 @@ function showResults() {
   const ringEl = document.getElementById('scoreRing');
   const gradeEl = document.getElementById('gradeLabel');
 
-  let grade, gc, gb;
-  if (total >= 80) { grade = 'A — Excellent'; gc = 'hsl(var(--success))'; gb = 'hsl(var(--success-bg))'; }
-  else if (total >= 60) { grade = 'B — Good'; gc = 'hsl(var(--success))'; gb = 'hsl(var(--success-bg))'; }
-  else if (total >= 40) { grade = 'C — Needs Work'; gc = 'hsl(var(--warning))'; gb = 'hsl(var(--warning-bg))'; }
-  else { grade = 'D — Critical'; gc = 'hsl(var(--destructive))'; gb = 'hsl(var(--destructive-bg))'; }
+  let grade;
+  let gradeClass;
+  let scoreHueVar;
+  if (total >= 80) {
+    grade = 'A — Excellent';
+    gradeClass = 'grade-excellent';
+    scoreHueVar = '--chart-score-high';
+  } else if (total >= 60) {
+    grade = 'B — Good';
+    gradeClass = 'grade-good';
+    scoreHueVar = '--chart-score-high';
+  } else if (total >= 40) {
+    grade = 'C — Needs Work';
+    gradeClass = 'grade-needs';
+    scoreHueVar = '--chart-score-mid';
+  } else {
+    grade = 'D — Critical';
+    gradeClass = 'grade-critical';
+    scoreHueVar = '--chart-score-low';
+  }
 
   scoreEl.textContent = total;
-  ringEl.style.borderColor = gc;
-  scoreEl.style.color = gc;
+  gradeEl.className = 'grade-label ' + gradeClass;
   gradeEl.textContent = grade;
-  gradeEl.style.background = gb;
-  gradeEl.style.color = gc;
+
+  ringEl.style.borderColor = 'hsl(var(' + scoreHueVar + '))';
+  scoreEl.style.color = 'hsl(var(' + scoreHueVar + '))';
+
+  const live = document.getElementById('resultsLive');
+  if (live) {
+    live.textContent = `CRM health score ${total} out of 100. Grade ${grade}. See category breakdown and action plan below.`;
+  }
 
   const catContainer = document.getElementById('categoryScores');
   catContainer.innerHTML = '';
   categories.forEach(cat => {
     const score = catScores[cat];
     const pct = (score / 20) * 100;
-    /* Warm Zinc chart roles: --chart-2 high, --chart-3 mid, --chart-5 low */
-    let color = 'hsl(var(--chart-score-high))';
-    if (score < 8) color = 'hsl(var(--chart-score-low))';
-    else if (score < 16) color = 'hsl(var(--chart-score-mid))';
+    let chartVar = '--chart-score-high';
+    if (score < 8) chartVar = '--chart-score-low';
+    else if (score < 16) chartVar = '--chart-score-mid';
     catContainer.innerHTML += `
       <div class="cat-row">
         <span class="cat-name">${cat}</span>
-        <div class="cat-bar-wrap"><div class="cat-bar" style="width:${pct}%;background:${color}"></div></div>
-        <span class="cat-score-num" style="color:${color}">${score}/20</span>
+        <div class="cat-bar-wrap" title="${cat}: ${score} out of 20 points">
+          <div class="cat-bar" style="width:${pct}%;--bar-accent:var(${chartVar});background:hsl(var(${chartVar}))"></div>
+        </div>
+        <span class="cat-score-num" style="color:hsl(var(${chartVar}))">${score}/20</span>
       </div>`;
   });
 
@@ -891,13 +1129,16 @@ function showResults() {
       html += `<div class="pipe-stat highlight" style="grid-column:span 2"><div class="label">⚠ Revenue at Risk (CRM score below 60)</div><div class="value">${fmt(atRisk)}</div></div>`;
     }
     document.getElementById('pipelineResults').innerHTML = html;
+  } else {
+    document.getElementById('pipelineCard').style.display = 'none';
   }
 
   const planContainer = document.getElementById('actionPlan');
   planContainer.innerHTML = '';
   [...categories].sort((a, b) => catScores[a] - catScores[b]).forEach(cat => {
     const score = catScores[cat];
-    let status, rec;
+    let status;
+    let rec;
     if (score < 8) { status = 'hsl(var(--destructive))'; rec = actionRecs[cat].red; }
     else if (score < 16) { status = 'hsl(var(--warning))'; rec = actionRecs[cat].yellow; }
     else { status = 'hsl(var(--success))'; rec = actionRecs[cat].green; }
@@ -910,7 +1151,12 @@ function showResults() {
         <div class="action-recs">${rec}</div>
       </div>`;
   });
+
+  requestAnimationFrame(() => focusEl(document.getElementById('resultsScoreCard')));
 }
+
+initTheme();
+updateProgress(0, 22, 'Start');
 </script>
 </body>
 </html>
