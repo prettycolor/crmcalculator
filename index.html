@@ -1521,7 +1521,7 @@ function initTheme() {
   }
   const btn = document.getElementById('themeToggle');
   if (btn) {
-    const hideToggle = isEmbedMode() || urlTheme === 'dark' || urlTheme === 'light' || urlTheme === 'system';
+    const hideToggle = isEmbedMode() || urlTheme === 'dark' || urlTheme === 'light';
     if (hideToggle) {
       btn.style.display = 'none';
       btn.setAttribute('aria-hidden', 'true');
