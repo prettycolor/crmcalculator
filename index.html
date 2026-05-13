@@ -103,13 +103,21 @@
   --info: 217 91% 60%;
   --info-bg: 217 91% 60% / 0.08;
 
-  /* Score bars — design-system chart-2 / chart-3 / chart-5 */
-  --chart-score-high: var(--success);
-  --chart-score-mid: var(--warning);
-  --chart-score-low: var(--destructive);
+  /* Charts — Warm Zinc (okaybabe colors_and_type.css :root) */
+  --chart-1: 263 70% 58%;
+  --chart-2: 142 71% 45%;
+  --chart-3: 25 95% 53%;
+  --chart-4: 217 91% 60%;
+  --chart-5: 0 72% 51%;
 
-  --shadow-sm: 0 1px 2px hsl(263 6% 50% / 0.04);
-  --shadow-md: 0 2px 6px hsl(263 6% 50% / 0.06), 0 1px 2px hsl(263 6% 50% / 0.04);
+  /* Category score bars — chart roles (no stray hues outside design-system chart palette) */
+  --chart-score-high: var(--chart-2);
+  --chart-score-mid: var(--chart-3);
+  --chart-score-low: var(--chart-5);
+
+  --shadow-color: 263 6% 50%;
+  --shadow-sm: 0 1px 2px hsl(var(--shadow-color) / 0.04);
+  --shadow-md: 0 2px 6px hsl(var(--shadow-color) / 0.06), 0 1px 2px hsl(var(--shadow-color) / 0.04);
 
   --radius: 8px;
   --radius-lg: 12px;
@@ -853,6 +861,7 @@ function showResults() {
   categories.forEach(cat => {
     const score = catScores[cat];
     const pct = (score / 20) * 100;
+    /* Warm Zinc chart roles: --chart-2 high, --chart-3 mid, --chart-5 low */
     let color = 'hsl(var(--chart-score-high))';
     if (score < 8) color = 'hsl(var(--chart-score-low))';
     else if (score < 16) color = 'hsl(var(--chart-score-mid))';
