@@ -64,7 +64,6 @@ Sources are indicative of industry practice; they are not okaybabe-specific expe
 | 9, 11, 12 | Follow-up | 24h; automation; sequence | **7** 24h; **8** automation anti-cold; **9** logging discipline |
 | 10 | Follow-up | Log consistently | **9** |
 | 13, 14, 15 | Reporting | Weekly review; win by source; stage losses | **10** forecast; **11** weekly metrics; **12** loss diagnosis |
-| 11, 12 | (partial) | | |
 | 16–19 | Tool Fit | Adoption; integration; mobile; saves time | **13–15** (combined mobile + desktop “prefer CRM” framing) |
 
 New question texts are in [`index.html`](../index.html) `questions` array (source of truth).
