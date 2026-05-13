@@ -1003,7 +1003,7 @@ html.embed .container {
     id="progressWidget"
     role="progressbar"
     aria-valuemin="0"
-    aria-valuemax="22"
+    aria-valuemax="18"
     aria-valuenow="0"
     aria-label="Audit progress"
     aria-valuetext="Start, step 0 of 22"
@@ -1022,11 +1022,11 @@ html.embed .container {
   <!-- SCREEN: INTRO -->
   <div class="screen active" id="screen-intro" data-crmcalc-step="intro">
     <div class="intro-card fade-in">
-      <div class="time-badge">Takes 4 minutes</div>
+      <div class="time-badge">Takes ~3 minutes</div>
       <h2 tabindex="-1" id="introHeading">Is your CRM costing you deals?</h2>
       <p>Score your sales operations across 5 categories, calculate your pipeline value, and get a personalized action plan.</p>
       <ul class="intro-features">
-        <li><span class="check"><svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M3 8.5l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span> 20-question CRM health scorecard</li>
+        <li><span class="check"><svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M3 8.5l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span> 15-question CRM health scorecard (research-backed)</li>
         <li><span class="check"><svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M3 8.5l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span> Pipeline value calculator with benchmarks</li>
         <li><span class="check"><svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M3 8.5l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span> Personalized action plan for your biggest gaps</li>
       </ul>
@@ -1124,12 +1124,12 @@ html.embed .container {
   <div class="screen" id="screen-results" data-crmcalc-step="results">
     <div class="results-card fade-in" id="resultsScoreCard" tabindex="-1">
       <h2 id="resultsHeading">Your CRM Health Score</h2>
-      <p class="sub">Based on your 20 answers across 5 categories</p>
+      <p class="sub">Based on your 15 answers across 5 categories</p>
       <div class="overall-score">
         <div class="score-ring" id="scoreRing">
           <div>
             <div class="number" id="scoreNumber">0</div>
-            <div class="out-of">/ 100</div>
+            <div class="out-of" id="scoreOutOf">/ 75</div>
           </div>
         </div>
         <span class="grade-label" id="gradeLabel" role="status"></span>
@@ -1191,15 +1191,6 @@ function isEmbedMode() {
 function isGateEnabled() {
   return CRM_CALC_SEARCH.get('gate') === '1';
 }
-function getProgressTotal() {
-  return isGateEnabled() ? 23 : 22;
-}
-function syncProgressAriaMax() {
-  const w = document.getElementById('progressWidget');
-  const t = getProgressTotal();
-  if (w) w.setAttribute('aria-valuemax', String(t));
-}
-
 let resizeNotifyTimer = null;
 function notifyParentResize() {
   if (!isEmbedMode()) return;
@@ -1220,7 +1211,6 @@ function notifyParentResizeDebounced() {
 }
 
 const THEME_KEY = 'crmcalc-theme';
-const STATE_HASH_PREFIX = 'v=1&d=';
 const GATE_DONE_KEY = 'crmcalc-gate-done';
 const GATE_LEAD_KEY = 'crmcalc-gate-lead';
 let answerHistory = [];
@@ -1229,36 +1219,48 @@ let pendingRestorePayload = null;
 if (isEmbedMode()) {
   document.documentElement.classList.add('embed');
 }
-syncProgressAriaMax();
 window.addEventListener('resize', notifyParentResizeDebounced);
 window.addEventListener('load', () => notifyParentResizeSoon());
 
 const questions = [
-  { cat: "Data Hygiene", q: "Do you have a process for removing stale or inactive leads?" },
-  { cat: "Data Hygiene", q: "Are contact records updated after every meaningful interaction?" },
-  { cat: "Data Hygiene", q: "Can you find any contact's full history in under 30 seconds?" },
-  { cat: "Data Hygiene", q: "Are duplicate contacts identified and merged regularly?" },
-  { cat: "Pipeline Visibility", q: "Can you see how many deals are in each stage right now?" },
-  { cat: "Pipeline Visibility", q: "Do you know your average deal cycle length?" },
-  { cat: "Pipeline Visibility", q: "Is every active deal assigned to a specific rep with a next step?" },
-  { cat: "Pipeline Visibility", q: "Can you tell which deals haven't been touched in over a week?" },
-  { cat: "Follow-Up Discipline", q: "Does every new lead get a follow-up within 24 hours?" },
-  { cat: "Follow-Up Discipline", q: "Do you have automated reminders for deals going cold?" },
-  { cat: "Follow-Up Discipline", q: "Is there a defined sequence for working new leads?" },
-  { cat: "Follow-Up Discipline", q: "Do reps log their outreach activities consistently?" },
-  { cat: "Reporting & Forecasting", q: "Can you forecast next month's revenue within 20% accuracy?" },
-  { cat: "Reporting & Forecasting", q: "Do you track win rate by lead source?" },
-  { cat: "Reporting & Forecasting", q: "Does your team review pipeline metrics at least weekly?" },
-  { cat: "Reporting & Forecasting", q: "Can you identify which stage loses the most deals?" },
-  { cat: "Tool Fit", q: "Does your team update the CRM without being reminded?" },
-  { cat: "Tool Fit", q: "Does your CRM integrate with your email and calendar?" },
-  { cat: "Tool Fit", q: "Can your team access the CRM easily from their phone?" },
-  { cat: "Tool Fit", q: "Would your team say the CRM saves them time rather than costing it?" },
+  { cat: "Data Hygiene", q: "Do you routinely clean stale records, merge duplicates, and keep ownership clear?" },
+  { cat: "Data Hygiene", q: "After meaningful interactions, are CRM records updated so the next touch has context?" },
+  { cat: "Data Hygiene", q: "Can anyone on the team pull a contact's full history in about a minute when needed?" },
+  { cat: "Pipeline Visibility", q: "Do you have a live view of deals by stage with counts you trust?" },
+  { cat: "Pipeline Visibility", q: "Do you track average cycle length and how long deals sit without activity?" },
+  { cat: "Pipeline Visibility", q: "Is every open deal owned with a documented next step?" },
+  { cat: "Follow-Up Discipline", q: "Do new leads get a first touch inside 24 hours?" },
+  { cat: "Follow-Up Discipline", q: "Do reminders or automation stop deals from going cold unnoticed?" },
+  { cat: "Follow-Up Discipline", q: "Do reps log key outreach consistently—not only at quarter-end?" },
+  { cat: "Reporting & Forecasting", q: "Can you forecast near-term revenue within a margin leadership would accept?" },
+  { cat: "Reporting & Forecasting", q: "Do you review pipeline and source-level win metrics at least weekly?" },
+  { cat: "Reporting & Forecasting", q: "Can you see which stage or lead source loses the most revenue?" },
+  { cat: "Tool Fit", q: "Does the team use the CRM daily without constant reminders?" },
+  { cat: "Tool Fit", q: "Are email and calendar integrated where work actually happens?" },
+  { cat: "Tool Fit", q: "Is the CRM easy enough on mobile and desktop that reps prefer it over spreadsheets?" },
 ];
 
 const categories = ["Data Hygiene", "Pipeline Visibility", "Follow-Up Discipline", "Reporting & Forecasting", "Tool Fit"];
 const catScores = {};
-categories.forEach(c => catScores[c] = 0);
+categories.forEach(c => { catScores[c] = 0; });
+
+const QUESTION_COUNT = questions.length;
+const MAX_AUDIT_SCORE = QUESTION_COUNT * 5;
+const CAT_MAX_POINTS = MAX_AUDIT_SCORE / categories.length;
+const AUDIT_PAYLOAD_VERSION = 2;
+const STATE_HASH_PREFIX_V1 = 'v=1&d=';
+const STATE_HASH_PREFIX_V2 = 'v=2&d=';
+
+function getProgressTotal() {
+  return isGateEnabled() ? QUESTION_COUNT + 3 : QUESTION_COUNT + 2;
+}
+function syncProgressAriaMax() {
+  const w = document.getElementById('progressWidget');
+  const t = getProgressTotal();
+  if (w) w.setAttribute('aria-valuemax', String(t));
+}
+
+syncProgressAriaMax();
 
 const actionRecs = {
   "Data Hygiene": { red: "Deduplicate contacts this week. Set a monthly cleanup reminder. Your CRM should flag duplicates automatically — if it doesn't, that's a tool problem.", yellow: "You're partway there. Formalize a weekly data hygiene habit: 15 minutes every Friday to clean stale records.", green: "Strong data hygiene. Keep the discipline — it compounds." },
@@ -1329,18 +1331,23 @@ function fromBase64Url(str) {
   return JSON.parse(json);
 }
 
+function expectedAnswerCount(p) {
+  return p && p.v === 2 ? QUESTION_COUNT : 20;
+}
+
 function validatePayload(p) {
-  if (!p || p.v !== 1) return false;
+  if (!p || (p.v !== 1 && p.v !== 2)) return false;
+  const n = expectedAnswerCount(p);
   const modes = ['intro', 'q', 'calc', 'gate', 'res'];
   if (modes.indexOf(p.m) === -1) return false;
   if (!Array.isArray(p.a)) return false;
-  if (p.a.length > 20) return false;
+  if (p.a.length > n) return false;
   for (let i = 0; i < p.a.length; i++) {
     if ([0, 3, 5].indexOf(p.a[i]) === -1) return false;
   }
   if (p.m === 'intro' && p.a.length !== 0) return false;
-  if (p.m === 'q' && p.a.length >= 20) return false;
-  if ((p.m === 'calc' || p.m === 'gate' || p.m === 'res') && p.a.length !== 20) return false;
+  if (p.m === 'q' && p.a.length >= n) return false;
+  if ((p.m === 'calc' || p.m === 'gate' || p.m === 'res') && p.a.length !== n) return false;
   if (p.m === 'gate' && !isGateEnabled()) return false;
   if (p.c != null && typeof p.c !== 'object') return false;
   return true;
@@ -1348,7 +1355,7 @@ function validatePayload(p) {
 
 function getSharePayload() {
   return {
-    v: 1,
+    v: AUDIT_PAYLOAD_VERSION,
     m: getActiveScreen(),
     a: answerHistory.slice(),
     c: readCalcInputs()
@@ -1389,17 +1396,17 @@ function applyPayload(p) {
     show('screen-questions');
     renderQuestion();
   } else if (p.m === 'calc') {
-    currentQ = 20;
-    updateProgress(21, getProgressTotal(), 'Pipeline Calculator');
+    currentQ = QUESTION_COUNT;
+    updateProgress(QUESTION_COUNT + 1, getProgressTotal(), 'Pipeline Calculator');
     show('screen-calc');
     requestAnimationFrame(() => focusEl(document.getElementById('calcCard')));
   } else if (p.m === 'gate') {
-    currentQ = 20;
-    updateProgress(22, getProgressTotal(), 'Almost there');
+    currentQ = QUESTION_COUNT;
+    updateProgress(QUESTION_COUNT + 2, getProgressTotal(), 'Almost there');
     show('screen-gate');
     requestAnimationFrame(() => focusEl(document.getElementById('gateCard')));
   } else {
-    currentQ = 20;
+    currentQ = QUESTION_COUNT;
     showResults();
   }
   hideResumePrompt();
@@ -1408,8 +1415,10 @@ function applyPayload(p) {
 
 function tryConsumeHashOnLoad() {
   const rawHash = location.hash.replace(/^#/, '');
-  if (!rawHash.startsWith(STATE_HASH_PREFIX)) return;
-  const enc = rawHash.slice(STATE_HASH_PREFIX.length);
+  let enc;
+  if (rawHash.startsWith(STATE_HASH_PREFIX_V2)) enc = rawHash.slice(STATE_HASH_PREFIX_V2.length);
+  else if (rawHash.startsWith(STATE_HASH_PREFIX_V1)) enc = rawHash.slice(STATE_HASH_PREFIX_V1.length);
+  else return;
   let payload;
   try {
     payload = fromBase64Url(enc);
@@ -1455,7 +1464,7 @@ async function copyResumeLink() {
   }
   const u = new URL(location.href);
   if (payload.m === 'gate') u.searchParams.set('gate', '1');
-  u.hash = STATE_HASH_PREFIX + toBase64Url(payload);
+  u.hash = STATE_HASH_PREFIX_V2 + toBase64Url(payload);
   const text = u.toString();
   try {
     await navigator.clipboard.writeText(text);
@@ -1590,7 +1599,7 @@ function startAudit() {
 function renderQuestion() {
   const q = questions[currentQ];
   document.getElementById('catLabel').textContent = q.cat;
-  document.getElementById('qNumber').textContent = 'Question ' + (currentQ + 1) + ' of 20';
+  document.getElementById('qNumber').textContent = 'Question ' + (currentQ + 1) + ' of ' + QUESTION_COUNT;
   document.getElementById('qText').textContent = q.q;
   updateProgress(currentQ + 1, getProgressTotal(), q.cat);
   const card = document.getElementById('questionCard');
@@ -1604,9 +1613,9 @@ function answer(val) {
   answerHistory.push(val);
   catScores[questions[currentQ].cat] += val;
   currentQ++;
-  if (currentQ < 20) { renderQuestion(); }
+  if (currentQ < QUESTION_COUNT) { renderQuestion(); }
   else {
-    updateProgress(21, getProgressTotal(), 'Pipeline Calculator');
+    updateProgress(QUESTION_COUNT + 1, getProgressTotal(), 'Pipeline Calculator');
     show('screen-calc');
     requestAnimationFrame(() => focusEl(document.getElementById('calcCard')));
   }
@@ -1622,7 +1631,7 @@ function gateAlreadyCompleted() {
 
 function onCalcSubmit() {
   if (isGateEnabled() && !gateAlreadyCompleted()) {
-    updateProgress(22, getProgressTotal(), 'Almost there');
+    updateProgress(QUESTION_COUNT + 2, getProgressTotal(), 'Almost there');
     show('screen-gate');
     const err = document.getElementById('gateError');
     if (err) err.textContent = '';
@@ -1704,22 +1713,24 @@ function showResults() {
   show('screen-results');
 
   const total = Object.values(catScores).reduce((a, b) => a + b, 0);
+  const scorePct = MAX_AUDIT_SCORE > 0 ? total / MAX_AUDIT_SCORE : 0;
   const scoreEl = document.getElementById('scoreNumber');
+  const scoreOutEl = document.getElementById('scoreOutOf');
   const ringEl = document.getElementById('scoreRing');
   const gradeEl = document.getElementById('gradeLabel');
 
   let grade;
   let gradeClass;
   let scoreHueVar;
-  if (total >= 80) {
+  if (scorePct >= 0.8) {
     grade = 'A — Excellent';
     gradeClass = 'grade-excellent';
     scoreHueVar = '--chart-score-high';
-  } else if (total >= 60) {
+  } else if (scorePct >= 0.6) {
     grade = 'B — Good';
     gradeClass = 'grade-good';
     scoreHueVar = '--chart-score-high';
-  } else if (total >= 40) {
+  } else if (scorePct >= 0.4) {
     grade = 'C — Needs Work';
     gradeClass = 'grade-needs';
     scoreHueVar = '--chart-score-mid';
@@ -1730,6 +1741,7 @@ function showResults() {
   }
 
   scoreEl.textContent = total;
+  if (scoreOutEl) scoreOutEl.textContent = '/ ' + MAX_AUDIT_SCORE;
   gradeEl.className = 'grade-label ' + gradeClass;
   gradeEl.textContent = grade;
 
@@ -1738,24 +1750,26 @@ function showResults() {
 
   const live = document.getElementById('resultsLive');
   if (live) {
-    live.textContent = `CRM health score ${total} out of 100. Grade ${grade}. See category breakdown and action plan below.`;
+    live.textContent = `CRM health score ${total} out of ${MAX_AUDIT_SCORE}. Grade ${grade}. See category breakdown and action plan below.`;
   }
 
+  const catLow = CAT_MAX_POINTS * 0.4;
+  const catMid = CAT_MAX_POINTS * 0.8;
   const catContainer = document.getElementById('categoryScores');
   catContainer.innerHTML = '';
   categories.forEach(cat => {
     const score = catScores[cat];
-    const pct = (score / 20) * 100;
+    const pct = CAT_MAX_POINTS > 0 ? (score / CAT_MAX_POINTS) * 100 : 0;
     let chartVar = '--chart-score-high';
-    if (score < 8) chartVar = '--chart-score-low';
-    else if (score < 16) chartVar = '--chart-score-mid';
+    if (score < catLow) chartVar = '--chart-score-low';
+    else if (score < catMid) chartVar = '--chart-score-mid';
     catContainer.innerHTML += `
       <div class="cat-row">
         <span class="cat-name">${cat}</span>
-        <div class="cat-bar-wrap" title="${cat}: ${score} out of 20 points">
+        <div class="cat-bar-wrap" title="${cat}: ${score} out of ${CAT_MAX_POINTS} points in this category">
           <div class="cat-bar" style="width:${pct}%;--bar-accent:var(${chartVar});background:hsl(var(${chartVar}))"></div>
         </div>
-        <span class="cat-score-num" style="color:hsl(var(${chartVar}))">${score}/20</span>
+        <span class="cat-score-num" style="color:hsl(var(${chartVar}))">${score}/${CAT_MAX_POINTS}</span>
       </div>`;
   });
 
@@ -1765,9 +1779,10 @@ function showResults() {
     const weighted = totalPipeline * (winRate / 100);
     const monthly = weighted * (30 / cycle);
     const annual = monthly * 12;
-    const riskPct = total < 60 ? (total < 40 ? 0.30 : 0.15) : 0;
+    const riskPct = scorePct < 0.4 ? 0.30 : scorePct < 0.6 ? 0.15 : 0;
     const atRisk = totalPipeline * riskPct;
     const fmt = n => '$' + Math.round(n).toLocaleString();
+    const riskLabelMid = Math.round(MAX_AUDIT_SCORE * 0.6);
     let html = `
       <div class="pipe-stat"><div class="label">Total Pipeline</div><div class="value">${fmt(totalPipeline)}</div></div>
       <div class="pipe-stat"><div class="label">Weighted Pipeline</div><div class="value">${fmt(weighted)}</div></div>
@@ -1775,7 +1790,7 @@ function showResults() {
       <div class="pipe-stat"><div class="label">Annual Projected</div><div class="value">${fmt(annual)}</div></div>`;
     if (atRisk > 0) {
       const warnIcon = '<svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M8 2.5L14.5 13h-13L8 2.5z" stroke="currentColor" stroke-width="1.25" stroke-linejoin="round"/><path d="M8 6v3.25M8 11.2h.01" stroke="currentColor" stroke-width="1.25" stroke-linecap="round"/></svg>';
-      html += `<div class="pipe-stat highlight" style="grid-column:span 2"><div class="label pipe-warn-label">${warnIcon}<span>Revenue at Risk (CRM score below 60)</span></div><div class="value">${fmt(atRisk)}</div></div>`;
+      html += `<div class="pipe-stat highlight" style="grid-column:span 2"><div class="label pipe-warn-label">${warnIcon}<span>Revenue at Risk (overall CRM score under ${riskLabelMid} / ${MAX_AUDIT_SCORE})</span></div><div class="value">${fmt(atRisk)}</div></div>`;
     }
     document.getElementById('pipelineResults').innerHTML = html;
   } else {
@@ -1788,14 +1803,14 @@ function showResults() {
     const score = catScores[cat];
     let status;
     let rec;
-    if (score < 8) { status = 'hsl(var(--destructive))'; rec = actionRecs[cat].red; }
-    else if (score < 16) { status = 'hsl(var(--warning))'; rec = actionRecs[cat].yellow; }
+    if (score < catLow) { status = 'hsl(var(--destructive))'; rec = actionRecs[cat].red; }
+    else if (score < catMid) { status = 'hsl(var(--warning))'; rec = actionRecs[cat].yellow; }
     else { status = 'hsl(var(--success))'; rec = actionRecs[cat].green; }
     planContainer.innerHTML += `
       <div class="action-item">
         <div class="action-header">
           <div class="action-status" style="background:${status}"></div>
-          <div class="action-title">${cat} — ${score}/20</div>
+          <div class="action-title">${cat} — ${score}/${CAT_MAX_POINTS}</div>
         </div>
         <div class="action-recs">${rec}</div>
       </div>`;
