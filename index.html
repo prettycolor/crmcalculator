@@ -753,26 +753,28 @@ body {
   color: hsl(var(--destructive));
 }
 
-/* ── Resume + share (screen only) ── */
-.resume-banner {
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 10px 16px;
-  padding: 12px 16px;
-  background: hsl(var(--surface-elevated));
-  border-bottom: 1px solid hsl(var(--border));
+/* ── Resume prompt + share footer (in-flow, scrolls with page) ── */
+.resume-prompt {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: var(--radius);
+  border: 1px solid hsl(var(--border));
+  background: hsl(var(--surface));
   font-family: var(--font-sans);
   font-size: 14px;
   color: hsl(var(--foreground));
 }
-.resume-banner p { margin: 0; }
-.resume-banner-actions {
+.resume-prompt-inner {
   display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.resume-prompt-text { margin: 0; flex: 1 1 200px; }
+.resume-prompt-actions {
+  display: flex;
+  flex-shrink: 0;
   gap: 8px;
 }
 .resume-btn {
@@ -801,6 +803,12 @@ body {
   margin-top: 24px;
   padding-top: 20px;
   border-top: 1px solid hsl(var(--border));
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 14px;
+}
+.share-footer-main {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -968,21 +976,13 @@ html.embed .container {
 </head>
 <body>
 
-<div id="resumeBanner" class="resume-banner no-print" hidden role="region" aria-label="Saved progress prompt">
-  <p>Resume saved progress from this link?</p>
-  <div class="resume-banner-actions">
-    <button type="button" class="resume-btn resume-btn-primary" id="resumeAcceptBtn">Resume</button>
-    <button type="button" class="resume-btn" id="resumeDismissBtn">Dismiss</button>
-  </div>
-</div>
-
 <div class="container">
   <header class="site-header">
     <div class="brand">
       <h1>okay<span>babe</span></h1>
       <p>CRM Health Audit + Pipeline Calculator</p>
     </div>
-    <button type="button" class="theme-toggle no-print" id="themeToggle" aria-pressed="false" aria-label="Theme: system. Press to use light mode." title="Cycle theme: system, light, dark">
+    <button type="button" class="theme-toggle no-print" id="themeToggle" aria-pressed="false" aria-label="Theme: matches device. Press to switch to fixed light or dark." title="Switch between light and dark appearance (use ?theme=system to follow device)">
       <span class="visually-hidden" id="themeToggleText">Theme: system</span>
       <svg id="themeIconAuto" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
         <path d="M12 3v2M12 19v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M3 12h2M19 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
@@ -1158,8 +1158,19 @@ html.embed .container {
   </main>
 
   <footer class="share-footer no-print" id="shareFooter" hidden>
-    <button type="button" class="share-btn" id="copyLinkBtn">Copy link to resume later</button>
-    <span class="share-hint" id="copyLinkStatus" role="status" aria-live="polite"></span>
+    <div id="resumePrompt" class="resume-prompt" hidden role="region" aria-label="Saved progress prompt">
+      <div class="resume-prompt-inner">
+        <p class="resume-prompt-text">Resume saved progress from this link?</p>
+        <div class="resume-prompt-actions">
+          <button type="button" class="resume-btn resume-btn-primary" id="resumeAcceptBtn">Resume</button>
+          <button type="button" class="resume-btn" id="resumeDismissBtn">Dismiss</button>
+        </div>
+      </div>
+    </div>
+    <div class="share-footer-main">
+      <button type="button" class="share-btn" id="copyLinkBtn">Copy link to resume later</button>
+      <span class="share-hint" id="copyLinkStatus" role="status" aria-live="polite"></span>
+    </div>
   </footer>
 </div>
 
@@ -1350,14 +1361,15 @@ function clearStateHashFromUrl() {
   history.replaceState(null, '', u);
 }
 
-function hideResumeBanner() {
-  const b = document.getElementById('resumeBanner');
-  if (b) b.hidden = true;
+function hideResumePrompt() {
+  const el = document.getElementById('resumePrompt');
+  if (el) el.hidden = true;
 }
 
-function showResumeBanner() {
-  const b = document.getElementById('resumeBanner');
-  if (b) b.hidden = false;
+function showResumePrompt() {
+  const el = document.getElementById('resumePrompt');
+  if (el) el.hidden = false;
+  updateShareFooterVisibility();
 }
 
 function applyPayload(p) {
@@ -1389,7 +1401,7 @@ function applyPayload(p) {
     currentQ = 20;
     showResults();
   }
-  hideResumeBanner();
+  hideResumePrompt();
   updateShareFooterVisibility();
 }
 
@@ -1406,6 +1418,7 @@ function tryConsumeHashOnLoad() {
   if (!validatePayload(payload)) return;
 
   const u = new URL(location.href);
+  /* Silent restore: ?restore=1 applies hash state immediately with no footer prompt (bookmark / automation). */
   if (u.searchParams.get('restore') === '1') {
     applyPayload(payload);
     u.searchParams.delete('restore');
@@ -1415,14 +1428,20 @@ function tryConsumeHashOnLoad() {
   }
 
   pendingRestorePayload = payload;
-  showResumeBanner();
+  showResumePrompt();
 }
 
 function updateShareFooterVisibility() {
   const foot = document.getElementById('shareFooter');
   if (!foot) return;
   const mode = getActiveScreen();
-  const visible = answerHistory.length > 0 || mode === 'calc' || mode === 'gate' || mode === 'res';
+  const hasPendingRestore = pendingRestorePayload != null;
+  const visible =
+    hasPendingRestore ||
+    answerHistory.length > 0 ||
+    mode === 'calc' ||
+    mode === 'gate' ||
+    mode === 'res';
   foot.hidden = !visible;
 }
 
@@ -1472,43 +1491,34 @@ function applyTheme() {
 
   [iconAuto, iconLight, iconDark].forEach(el => { if (el) el.style.display = 'none'; });
 
-  let nextMode;
   let iconEl = iconAuto;
   let aria;
   if (themePreference === 'system') {
     iconEl = iconAuto;
-    nextMode = 'light';
-    aria = 'Theme: system (matches device). Press to use light mode.';
+    aria = 'Theme: matches device. Press to switch to fixed light or dark.';
     if (labelEl) labelEl.textContent = 'Theme: system';
   } else if (themePreference === 'light') {
     iconEl = iconLight;
-    nextMode = 'dark';
-    aria = 'Theme: light. Press to use dark mode.';
+    aria = 'Light appearance. Press to switch to dark.';
     if (labelEl) labelEl.textContent = 'Theme: light';
   } else {
     iconEl = iconDark;
-    nextMode = 'system';
-    aria = 'Theme: dark. Press to use system theme.';
+    aria = 'Dark appearance. Press to switch to light.';
     if (labelEl) labelEl.textContent = 'Theme: dark';
   }
   if (iconEl) iconEl.style.display = '';
 
   toggle.setAttribute('aria-label', aria);
-  // Tri-state control: pressed = dark manual, unpressed = light manual, mixed = follow system (not "effective dark" — that caused double-clicks when system→light matched OS light).
+  // One control = flip appearance: after any click we only store light/dark; "system" is initial/sync-only.
   const pressed =
     themePreference === 'dark' ? 'true' : themePreference === 'light' ? 'false' : 'mixed';
   toggle.setAttribute('aria-pressed', pressed);
 }
 
 function cycleTheme() {
-  // From system, jump to the *opposite* of the current effective appearance so one click always flips light/dark pixels (system→light was a no-op when OS was already light).
-  if (themePreference === 'system') {
-    themePreference = isEffectiveDark() ? 'light' : 'dark';
-  } else if (themePreference === 'light') {
-    themePreference = 'dark';
-  } else {
-    themePreference = 'system';
-  }
+  // Always flip the *effective* light/dark look in one click (never cycle to `system` here — dark→system
+  // matched OS dark and looked like a no-op; same for light→system on a light OS).
+  themePreference = isEffectiveDark() ? 'light' : 'dark';
   try { localStorage.setItem(THEME_KEY, themePreference); } catch (e) { /* ignore */ }
   applyTheme();
 }
@@ -1810,16 +1820,19 @@ updateProgress(0, getProgressTotal(), 'Start');
   const copyBtn = document.getElementById('copyLinkBtn');
   if (accept) {
     accept.addEventListener('click', () => {
-      if (pendingRestorePayload) applyPayload(pendingRestorePayload);
+      const p = pendingRestorePayload;
       pendingRestorePayload = null;
+      if (p) applyPayload(p);
+      else hideResumePrompt();
       clearStateHashFromUrl();
     });
   }
   if (dismiss) {
     dismiss.addEventListener('click', () => {
       pendingRestorePayload = null;
-      hideResumeBanner();
+      hideResumePrompt();
       clearStateHashFromUrl();
+      updateShareFooterVisibility();
     });
   }
   if (copyBtn) copyBtn.addEventListener('click', () => { copyResumeLink(); });
