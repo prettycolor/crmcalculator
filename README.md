@@ -22,7 +22,12 @@ Then visit `http://localhost:8080`.
 
 ## Fonts
 
-Headings and body use **Soehne** and **National 2** via `@font-face` with `local()` lookups; **JetBrains Mono** is used for metrics. They render as intended when those fonts are installed locally. For production on okaybabe.co, plan to self-host `woff2` files next to this page (or serve them from your asset CDN) and extend `@font-face` with `url(...)` sources.
+The page loads **`fonts/*.woff2`** first, then falls back to **`local()`** if the files are missing.
+
+- **JetBrains Mono** (`fonts/jetbrains-mono-regular.woff2`) is OFL-licensed and **committed** in this repo.
+- **Klim Slate A** — National 2 + Söhne files (`national-2-*.woff2`, `soehne-*.woff2`) are **gitignored** so they are not pushed to public remotes. Copy them from your licensed bundle into `fonts/` (e.g. `Documents/okaybabe-licenses/web-deploy/`). Follow your Klim order terms for pageviews, MAU, and paid-media restrictions.
+
+If the Klim files are absent, the CSS falls back to installed desktop fonts, then `system-ui`.
 
 ## Repository
 

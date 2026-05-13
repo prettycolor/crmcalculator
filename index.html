@@ -12,34 +12,63 @@
    Fonts: Soehne (display) · National 2 (body) · JetBrains Mono (mono)
    ═══════════════════════════════════════════════════ */
 
-/* — okaybabe brand fonts via local install — */
+/* — Self-hosted woff2 (paths relative to this file) + local() fallback — */
 @font-face {
   font-family: 'Soehne';
-  src: local('Soehne'), local('Soehne-Buch'), local('Soehne Book');
-  font-weight: 400;
   font-style: normal;
+  font-weight: 400;
   font-display: swap;
+  src: url('fonts/soehne-buch.woff2') format('woff2'),
+       local('Soehne'), local('Soehne-Buch'), local('Soehne Book');
 }
 @font-face {
   font-family: 'Soehne';
-  src: local('Soehne-Halbfett'), local('Soehne Halbfett'), local('Soehne-Kraftig'), local('Soehne Kraftig');
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('fonts/soehne-buch-kursiv.woff2') format('woff2'),
+       local('Soehne Buch Kursiv'), local('Soehne-Kursiv');
+}
+@font-face {
+  font-family: 'Soehne';
+  font-style: normal;
   font-weight: 600;
-  font-style: normal;
   font-display: swap;
+  src: url('fonts/soehne-halbfett.woff2') format('woff2'),
+       local('Soehne-Halbfett'), local('Soehne Halbfett'), local('Soehne-Kraftig'), local('Soehne Kraftig');
 }
+/* National 2 web bundle: medium serves both 400 + 500 body text */
 @font-face {
   font-family: 'National 2';
-  src: local('National 2'), local('National2-Regular'), local('National 2 Regular');
+  font-style: normal;
   font-weight: 400;
-  font-style: normal;
   font-display: swap;
+  src: url('fonts/national-2-medium.woff2') format('woff2'),
+       local('National 2'), local('National2-Regular'), local('National 2 Regular');
 }
 @font-face {
   font-family: 'National 2';
-  src: local('National 2 Medium'), local('National2-Medium');
-  font-weight: 500;
   font-style: normal;
+  font-weight: 500;
   font-display: swap;
+  src: url('fonts/national-2-medium.woff2') format('woff2'),
+       local('National 2 Medium'), local('National2-Medium');
+}
+@font-face {
+  font-family: 'National 2';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('fonts/national-2-bold.woff2') format('woff2'),
+       local('National 2 Bold'), local('National2-Bold');
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('fonts/jetbrains-mono-regular.woff2') format('woff2'),
+       local('JetBrains Mono'), local('JetBrainsMono-Regular');
 }
 
 :root {
