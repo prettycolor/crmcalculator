@@ -20,7 +20,12 @@
 - **Implementation plan:** [`docs/superpowers/plans/2026-05-13-crm-audit-question-bank-v2.md`](docs/superpowers/plans/2026-05-13-crm-audit-question-bank-v2.md).
 - **Share links:** New copies use `#v=2&d=…` with `v: 2` in the JSON payload. **`#v=1&d=…` links with 20 answers remain valid** for restore.
 
+## In-repo maintenance
+
+- **Regression checks:** `./scripts/verify.sh` (15 audit questions; rejects leftover `0 / 22` / `step 0 of 22` progress placeholders and “20 question” copy in `index.html` / `README.md` / `ROADMAP.md`).
+- **CI:** `.github/workflows/verify.yml` runs that script on every push and PR to `main`.
+
 ## Follow-ups (outside this repo)
 
-- **okaybabe.co**: Add a route (e.g. under `src/app/tools/…`) that hosts an iframe pointing at the deployed calculator URL, implements the resize listener, and aligns CSP (`frame-ancestors` / marketing site `frame-src`). **No change** to okaybabe.co in this commit.
+- **okaybabe.co**: Add a route (e.g. under `src/app/tools/…`) that hosts an iframe pointing at the deployed calculator URL, implements the resize listener, and aligns CSP (`frame-ancestors` / marketing site `frame-src`). Lives in the marketing app repo, not this static package.
 - **Lead capture**: Wire `CRM_CALC_SUBMIT_ENDPOINT` to a server action or API route (e.g. Resend) using secrets in hosting env only — not in this static repo.

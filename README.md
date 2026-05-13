@@ -93,6 +93,17 @@ python3 -m http.server 8080
 
 Then visit `http://localhost:8080`.
 
+### Verify (local + CI)
+
+Static checks (question count, no stale 22-step progress copy in `index.html`, no “20 question” UI copy in key files):
+
+```bash
+chmod +x scripts/verify.sh   # once
+./scripts/verify.sh
+```
+
+GitHub Actions runs the same script on push and pull requests to `main` (see `.github/workflows/verify.yml`).
+
 ## Fonts
 
 The page loads **`fonts/*.woff2`** (paths are relative to `index.html`), then falls back to **`local()`** if a file is missing.
