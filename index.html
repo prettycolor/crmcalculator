@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>okaybabe CRM Audit</title>
+<style>
+/* ═══════════════════════════════════════════════════
+   okaybabe Design Tokens — Warm Zinc (Light Mode)
+   Source: Ref-Design-Tokens wiki + brand fonts
+   60% zinc neutrals / 30% surface / 10% purple accent
+   Fonts: Soehne (display) · National 2 (body) · JetBrains Mono (mono)
+   ═══════════════════════════════════════════════════ */
+
+/* — okaybabe brand fonts via local install — */
+@font-face {
+  font-family: 'Soehne';
+  src: local('Soehne'), local('Soehne-Buch'), local('Soehne Book');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Soehne';
+  src: local('Soehne-Halbfett'), local('Soehne Halbfett'), local('Soehne-Kraftig'), local('Soehne Kraftig');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'National 2';
+  src: local('National 2'), local('National2-Regular'), local('National 2 Regular');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'National 2';
+  src: local('National 2 Medium'), local('National2-Medium');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* Brand Purple */
+  --primary: #7C3AED;
+  --primary-hover: #6D28D9;
+  --primary-dim: rgba(124, 58, 237, 0.07);
+  --ring: #7C3AED;
+
+  /* Backgrounds & Surfaces */
+  --background: hsl(40, 20%, 98%);
+  --surface: hsl(0, 0%, 100%);
+  --surface-elevated: hsl(0, 0%, 100%);
+  --surface-hover: hsl(240, 5%, 96%);
+
+  /* Text */
+  --foreground: hsl(240, 6%, 10%);
+  --muted-foreground: hsl(240, 4%, 46%);
+  --text-tertiary: hsl(240, 5%, 65%);
+  --text-disabled: hsl(240, 5%, 83%);
+
+  /* Borders */
+  --border: hsl(240, 6%, 90%);
+  --border-strong: hsl(240, 5%, 83%);
+  --border-subtle: hsl(240, 5%, 96%);
+
+  /* Status Colors — from Ref-Design-Tokens */
+  --success: #22C55E;
+  --success-bg: rgba(34, 197, 94, 0.08);
+  --warning: #EA580C;
+  --warning-bg: rgba(234, 88, 12, 0.08);
+  --destructive: #DC2626;
+  --destructive-bg: rgba(220, 38, 38, 0.08);
+  --info: #2563EB;
+  --info-bg: rgba(37, 99, 235, 0.08);
+
+  /* Layout */
+  --radius: 12px;
+
+  /* Typography — Soehne (display ≥20px) · National 2 (body <20px) · JetBrains Mono (metrics) */
+  --font-display: 'Soehne', system-ui, -apple-system, sans-serif;
+  --font-sans: 'National 2', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: var(--font-sans);
+  background: var(--background);
+  color: var(--foreground);
+  line-height: 1.6;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+.container {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 24px 20px 80px;
+}
+
+/* ── HEADER ── */
+.brand {
+  text-align: center;
+  margin-bottom: 32px;
+  padding-top: 20px;
+}
+.brand h1 {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--foreground);
+}
+.brand h1 span { color: var(--primary); }
+.brand p {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: var(--muted-foreground);
+  margin-top: 4px;
+}
+
+/* ── PROGRESS BAR ── */
+.progress-wrap { margin-bottom: 28px; }
+.progress-bar {
+  height: 3px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: var(--primary);
+  transition: width 0.4s ease;
+  width: 0%;
+}
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  color: var(--muted-foreground);
+  margin-top: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ── SCREENS ── */
+.screen { display: none; }
+.screen.active { display: block; }
+
+/* ── INTRO ── */
+.intro-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 40px 32px;
+  text-align: center;
+}
+.intro-card h2 {
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 600;
+  line-height: 1.3;
+  margin-bottom: 16px;
+  letter-spacing: -0.02em;
+}
+.intro-card p {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  color: var(--muted-foreground);
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+.intro-features {
+  list-style: none;
+  text-align: left;
+  margin: 24px 0;
+  font-family: var(--font-sans);
+  font-size: 14px;
+}
+.intro-features li {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.intro-features li:last-child { border-bottom: none; }
+.intro-features .check {
+  width: 20px; height: 20px;
+  background: var(--primary-dim);
+  color: var(--primary);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px;
+  flex-shrink: 0;
+}
+.time-badge {
+  display: inline-block;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: var(--muted-foreground);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 4px 14px;
+  margin-bottom: 24px;
+}
+
+/* ── QUESTION CARD ── */
+.question-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 32px;
+}
+.category-label {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--primary);
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+.question-number {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: var(--muted-foreground);
+  margin-bottom: 16px;
+}
+.question-text {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1.4;
+  margin-bottom: 28px;
+  letter-spacing: -0.02em;
+}
+.answer-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.answer-btn {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 18px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  color: var(--foreground);
+  transition: all 0.15s ease;
+  text-align: left;
+}
+.answer-btn:hover {
+  border-color: var(--primary);
+  background: var(--primary-dim);
+}
+.answer-btn .dot {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  flex-shrink: 0;
+  transition: all 0.15s ease;
+}
+.answer-btn:hover .dot { border-color: var(--primary); }
+
+/* ── CALCULATOR ── */
+.calc-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 32px;
+}
+.calc-card h2 {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  letter-spacing: -0.02em;
+}
+.calc-card > p {
+  font-size: 14px;
+  color: var(--muted-foreground);
+  margin-bottom: 24px;
+}
+.input-group { margin-bottom: 18px; }
+.input-group label {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: var(--muted-foreground);
+  margin-bottom: 5px;
+}
+.input-group input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-family: var(--font-mono);
+  font-size: 16px;
+  color: var(--foreground);
+  background: var(--background);
+  outline: none;
+  transition: border-color 0.15s;
+}
+.input-group input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-dim); }
+.input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+/* ── RESULTS ── */
+.results-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 32px;
+  margin-bottom: 16px;
+}
+.results-card h2 {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  letter-spacing: -0.02em;
+  color: var(--foreground);
+}
+.results-card > p.sub {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  color: var(--muted-foreground);
+  margin-bottom: 24px;
+}
+.overall-score {
+  text-align: center;
+  padding: 28px 0;
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+}
+.score-ring {
+  width: 120px; height: 120px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 12px;
+  border: 4px solid var(--border);
+  transition: border-color 0.3s ease;
+}
+.score-ring .number {
+  font-family: var(--font-mono);
+  font-size: 42px;
+  font-weight: 400;
+  line-height: 1;
+  transition: color 0.3s ease;
+}
+.score-ring .out-of {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  color: var(--muted-foreground);
+}
+.grade-label {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 5px 16px;
+  border-radius: 20px;
+  display: inline-block;
+  letter-spacing: 0.3px;
+  transition: all 0.3s ease;
+}
+.category-scores {
+  display: flex; flex-direction: column; gap: 14px;
+  margin-bottom: 24px;
+}
+.cat-row { display: flex; align-items: center; gap: 12px; }
+.cat-name {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  width: 140px;
+  flex-shrink: 0;
+  color: var(--foreground);
+}
+.cat-bar-wrap {
+  flex: 1; height: 8px;
+  background: var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.cat-bar { height: 100%; border-radius: 4px; transition: width 0.6s ease; }
+.cat-score-num {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  width: 44px;
+  text-align: right;
+  flex-shrink: 0;
+  font-weight: 400;
+}
+
+/* ── PIPELINE RESULTS ── */
+.pipeline-results { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
+.pipe-stat {
+  padding: 16px;
+  border-radius: 8px;
+  background: var(--background);
+  border: 1px solid var(--border);
+}
+.pipe-stat .label {
+  font-family: var(--font-sans);
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;
+  color: var(--muted-foreground); margin-bottom: 4px;
+}
+.pipe-stat .value {
+  font-family: var(--font-mono);
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--foreground);
+  letter-spacing: -0.02em;
+}
+.pipe-stat.highlight {
+  background: var(--destructive-bg);
+  border-color: rgba(220, 38, 38, 0.15);
+}
+.pipe-stat.highlight .value { color: var(--destructive); }
+
+/* ── ACTION PLAN ── */
+.action-item {
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+}
+.action-item:last-child { border-bottom: none; }
+.action-header { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.action-status { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.action-title {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--foreground);
+}
+.action-recs {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: var(--muted-foreground);
+  padding-left: 18px;
+  line-height: 1.6;
+}
+
+/* ── CTA ── */
+.cta-card {
+  background: hsl(240, 6%, 10%);
+  color: hsl(40, 20%, 98%);
+  border-radius: var(--radius);
+  padding: 32px; text-align: center;
+  margin-top: 16px;
+}
+.cta-card h3 {
+  font-family: var(--font-display);
+  font-size: 20px; font-weight: 600;
+  margin-bottom: 8px;
+  letter-spacing: -0.02em;
+}
+.cta-card p {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  opacity: 0.7;
+  margin-bottom: 20px;
+}
+.cta-btn {
+  display: inline-block;
+  padding: 14px 36px;
+  background: var(--primary);
+  color: white; border: none;
+  border-radius: 8px;
+  font-family: var(--font-sans);
+  font-size: 15px; font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+.cta-btn:hover { background: var(--primary-hover); }
+
+/* ── PRIMARY BUTTON ── */
+.primary-btn {
+  display: block; width: 100%;
+  padding: 16px;
+  background: var(--primary);
+  color: white; border: none;
+  border-radius: 8px;
+  font-family: var(--font-sans);
+  font-size: 16px; font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s;
+  margin-top: 24px;
+}
+.primary-btn:hover { background: var(--primary-hover); }
+
+/* ── BENCHMARK ── */
+.benchmark {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 14px;
+  background: var(--primary-dim);
+  border-radius: 8px;
+  margin-top: 12px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: var(--muted-foreground);
+  border: 1px solid rgba(124, 58, 237, 0.1);
+}
+
+/* ── ANIMATION ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.fade-in { animation: fadeUp 0.35s ease forwards; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="brand">
+    <h1>okay<span>babe</span></h1>
+    <p>CRM Health Audit + Pipeline Calculator</p>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-label">
+      <span id="progressStep">Start</span>
+      <span id="progressCount"></span>
+    </div>
+  </div>
+
+  <!-- SCREEN: INTRO -->
+  <div class="screen active" id="screen-intro">
+    <div class="intro-card fade-in">
+      <div class="time-badge">Takes 4 minutes</div>
+      <h2>Is your CRM costing you deals?</h2>
+      <p>Score your sales operations across 5 categories, calculate your pipeline value, and get a personalized action plan.</p>
+      <ul class="intro-features">
+        <li><span class="check">✓</span> 20-question CRM health scorecard</li>
+        <li><span class="check">✓</span> Pipeline value calculator with benchmarks</li>
+        <li><span class="check">✓</span> Personalized action plan for your biggest gaps</li>
+      </ul>
+      <button class="primary-btn" onclick="startAudit()">Start My CRM Audit</button>
+    </div>
+  </div>
+
+  <!-- SCREEN: QUESTIONS -->
+  <div class="screen" id="screen-questions">
+    <div class="question-card fade-in" id="questionCard">
+      <div class="category-label" id="catLabel"></div>
+      <div class="question-number" id="qNumber"></div>
+      <div class="question-text" id="qText"></div>
+      <div class="answer-buttons">
+        <button class="answer-btn" onclick="answer(5)">
+          <span class="dot"></span> Yes, consistently
+        </button>
+        <button class="answer-btn" onclick="answer(3)">
+          <span class="dot"></span> Partially or sometimes
+        </button>
+        <button class="answer-btn" onclick="answer(0)">
+          <span class="dot"></span> No, not really
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN: CALCULATOR -->
+  <div class="screen" id="screen-calc">
+    <div class="calc-card fade-in">
+      <h2>Now, your pipeline numbers</h2>
+      <p>Enter 5 numbers. We'll calculate what your pipeline is actually worth — and what you're leaving on the table.</p>
+      <div class="input-group">
+        <label>Active deals in your pipeline right now</label>
+        <input type="number" id="calcDeals" placeholder="e.g. 25" inputmode="numeric">
+      </div>
+      <div class="input-row">
+        <div class="input-group">
+          <label>Average deal value ($)</label>
+          <input type="number" id="calcDealValue" placeholder="e.g. 3500" inputmode="numeric">
+        </div>
+        <div class="input-group">
+          <label>Win rate (%)</label>
+          <input type="number" id="calcWinRate" placeholder="e.g. 30" inputmode="numeric">
+        </div>
+      </div>
+      <div class="input-row">
+        <div class="input-group">
+          <label>Avg sales cycle (days)</label>
+          <input type="number" id="calcCycle" placeholder="e.g. 45" inputmode="numeric">
+        </div>
+        <div class="input-group">
+          <label>New leads per month</label>
+          <input type="number" id="calcLeads" placeholder="e.g. 40" inputmode="numeric">
+        </div>
+      </div>
+      <div class="benchmark">
+        <span>📊</span>
+        <span>Top SMB teams: 40% win rate · 30-day cycle · 60+ leads/month</span>
+      </div>
+      <button class="primary-btn" onclick="showResults()">See My Results</button>
+    </div>
+  </div>
+
+  <!-- SCREEN: RESULTS -->
+  <div class="screen" id="screen-results">
+    <div class="results-card fade-in">
+      <h2>Your CRM Health Score</h2>
+      <p class="sub">Based on your 20 answers across 5 categories</p>
+      <div class="overall-score">
+        <div class="score-ring" id="scoreRing">
+          <div>
+            <div class="number" id="scoreNumber">0</div>
+            <div class="out-of">/ 100</div>
+          </div>
+        </div>
+        <span class="grade-label" id="gradeLabel"></span>
+      </div>
+      <div class="category-scores" id="categoryScores"></div>
+    </div>
+
+    <div class="results-card fade-in" id="pipelineCard" style="display:none;">
+      <h2>Your Pipeline</h2>
+      <p class="sub">What your numbers actually mean</p>
+      <div class="pipeline-results" id="pipelineResults"></div>
+    </div>
+
+    <div class="results-card fade-in">
+      <h2>Your Action Plan</h2>
+      <p class="sub">Prioritized by your weakest areas</p>
+      <div id="actionPlan"></div>
+    </div>
+
+    <div class="cta-card fade-in">
+      <h3>okaybabe fixes this.</h3>
+      <p>The CRM built for how modern sales teams actually work. Join 50+ founding members shaping the product.</p>
+      <a class="cta-btn" href="https://okaybabe.co" target="_blank">Join the Beta</a>
+    </div>
+  </div>
+</div>
+
+<script>
+const questions = [
+  { cat: "Data Hygiene", q: "Do you have a process for removing stale or inactive leads?" },
+  { cat: "Data Hygiene", q: "Are contact records updated after every meaningful interaction?" },
+  { cat: "Data Hygiene", q: "Can you find any contact's full history in under 30 seconds?" },
+  { cat: "Data Hygiene", q: "Are duplicate contacts identified and merged regularly?" },
+  { cat: "Pipeline Visibility", q: "Can you see how many deals are in each stage right now?" },
+  { cat: "Pipeline Visibility", q: "Do you know your average deal cycle length?" },
+  { cat: "Pipeline Visibility", q: "Is every active deal assigned to a specific rep with a next step?" },
+  { cat: "Pipeline Visibility", q: "Can you tell which deals haven't been touched in over a week?" },
+  { cat: "Follow-Up Discipline", q: "Does every new lead get a follow-up within 24 hours?" },
+  { cat: "Follow-Up Discipline", q: "Do you have automated reminders for deals going cold?" },
+  { cat: "Follow-Up Discipline", q: "Is there a defined sequence for working new leads?" },
+  { cat: "Follow-Up Discipline", q: "Do reps log their outreach activities consistently?" },
+  { cat: "Reporting & Forecasting", q: "Can you forecast next month's revenue within 20% accuracy?" },
+  { cat: "Reporting & Forecasting", q: "Do you track win rate by lead source?" },
+  { cat: "Reporting & Forecasting", q: "Does your team review pipeline metrics at least weekly?" },
+  { cat: "Reporting & Forecasting", q: "Can you identify which stage loses the most deals?" },
+  { cat: "Tool Fit", q: "Does your team update the CRM without being reminded?" },
+  { cat: "Tool Fit", q: "Does your CRM integrate with your email and calendar?" },
+  { cat: "Tool Fit", q: "Can your team access the CRM easily from their phone?" },
+  { cat: "Tool Fit", q: "Would your team say the CRM saves them time rather than costing it?" },
+];
+
+const categories = ["Data Hygiene", "Pipeline Visibility", "Follow-Up Discipline", "Reporting & Forecasting", "Tool Fit"];
+const catScores = {};
+categories.forEach(c => catScores[c] = 0);
+
+const actionRecs = {
+  "Data Hygiene": { red: "Deduplicate contacts this week. Set a monthly cleanup reminder. Your CRM should flag duplicates automatically — if it doesn't, that's a tool problem.", yellow: "You're partway there. Formalize a weekly data hygiene habit: 15 minutes every Friday to clean stale records.", green: "Strong data hygiene. Keep the discipline — it compounds." },
+  "Pipeline Visibility": { red: "Define your deal stages today. Map every active deal to a stage. Switch from list view to pipeline view — visibility changes behavior.", yellow: "Your pipeline exists but has blind spots. Add 'days in stage' tracking and flag anything over 2x your average cycle.", green: "Clear pipeline visibility. You're ahead of most SMB teams." },
+  "Follow-Up Discipline": { red: "Set a 24-hour follow-up rule starting today. Automate reminders for deals untouched for 7+ days. This is where the most revenue leaks.", yellow: "Follow-up happens but isn't systematic. Build a 5-touch outreach sequence your whole team follows.", green: "Disciplined follow-up. This is a real competitive advantage at your size." },
+  "Reporting & Forecasting": { red: "Start tracking 3 metrics: win rate, cycle length, pipeline coverage ratio (3x target = healthy). Review weekly.", yellow: "You have some reporting but gaps in forecasting. Add source attribution to every deal — you need to know what's working.", green: "Solid reporting foundation. Consider adding cohort analysis to spot trends." },
+  "Tool Fit": { red: "If your team doesn't use the CRM daily, the CRM is wrong for them. The tool should match how they sell, not force a new workflow.", yellow: "Partial adoption. The gap is usually mobile access or email integration. Fix the friction point and adoption follows.", green: "Your team actually uses the CRM. That's rarer than you think." }
+};
+
+let currentQ = 0;
+
+function show(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function updateProgress(step, total, label) {
+  document.getElementById('progressFill').style.width = (step / total * 100) + '%';
+  document.getElementById('progressStep').textContent = label;
+  document.getElementById('progressCount').textContent = step + ' / ' + total;
+}
+
+function startAudit() {
+  show('screen-questions');
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = questions[currentQ];
+  document.getElementById('catLabel').textContent = q.cat;
+  document.getElementById('qNumber').textContent = 'Question ' + (currentQ + 1) + ' of 20';
+  document.getElementById('qText').textContent = q.q;
+  updateProgress(currentQ + 1, 22, q.cat);
+  const card = document.getElementById('questionCard');
+  card.classList.remove('fade-in');
+  void card.offsetWidth;
+  card.classList.add('fade-in');
+}
+
+function answer(val) {
+  catScores[questions[currentQ].cat] += val;
+  currentQ++;
+  if (currentQ < 20) { renderQuestion(); }
+  else { updateProgress(21, 22, 'Pipeline Calculator'); show('screen-calc'); }
+}
+
+function showResults() {
+  const deals = parseFloat(document.getElementById('calcDeals').value) || 0;
+  const dealVal = parseFloat(document.getElementById('calcDealValue').value) || 0;
+  const winRate = parseFloat(document.getElementById('calcWinRate').value) || 0;
+  const cycle = parseFloat(document.getElementById('calcCycle').value) || 1;
+
+  updateProgress(22, 22, 'Your Results');
+  show('screen-results');
+
+  const total = Object.values(catScores).reduce((a, b) => a + b, 0);
+  const scoreEl = document.getElementById('scoreNumber');
+  const ringEl = document.getElementById('scoreRing');
+  const gradeEl = document.getElementById('gradeLabel');
+
+  let grade, gc, gb;
+  if (total >= 80) { grade = 'A — Excellent'; gc = 'var(--success)'; gb = 'var(--success-bg)'; }
+  else if (total >= 60) { grade = 'B — Good'; gc = 'var(--success)'; gb = 'var(--success-bg)'; }
+  else if (total >= 40) { grade = 'C — Needs Work'; gc = 'var(--warning)'; gb = 'var(--warning-bg)'; }
+  else { grade = 'D — Critical'; gc = 'var(--destructive)'; gb = 'var(--destructive-bg)'; }
+
+  scoreEl.textContent = total;
+  ringEl.style.borderColor = gc;
+  scoreEl.style.color = gc;
+  gradeEl.textContent = grade;
+  gradeEl.style.background = gb;
+  gradeEl.style.color = gc;
+
+  const catContainer = document.getElementById('categoryScores');
+  catContainer.innerHTML = '';
+  categories.forEach(cat => {
+    const score = catScores[cat];
+    const pct = (score / 20) * 100;
+    let color = 'var(--success)';
+    if (score < 8) color = 'var(--destructive)';
+    else if (score < 16) color = 'var(--warning)';
+    catContainer.innerHTML += `
+      <div class="cat-row">
+        <span class="cat-name">${cat}</span>
+        <div class="cat-bar-wrap"><div class="cat-bar" style="width:${pct}%;background:${color}"></div></div>
+        <span class="cat-score-num" style="color:${color}">${score}/20</span>
+      </div>`;
+  });
+
+  if (deals > 0 && dealVal > 0) {
+    document.getElementById('pipelineCard').style.display = 'block';
+    const totalPipeline = deals * dealVal;
+    const weighted = totalPipeline * (winRate / 100);
+    const monthly = weighted * (30 / cycle);
+    const annual = monthly * 12;
+    const riskPct = total < 60 ? (total < 40 ? 0.30 : 0.15) : 0;
+    const atRisk = totalPipeline * riskPct;
+    const fmt = n => '$' + Math.round(n).toLocaleString();
+    let html = `
+      <div class="pipe-stat"><div class="label">Total Pipeline</div><div class="value">${fmt(totalPipeline)}</div></div>
+      <div class="pipe-stat"><div class="label">Weighted Pipeline</div><div class="value">${fmt(weighted)}</div></div>
+      <div class="pipe-stat"><div class="label">Monthly Projected</div><div class="value">${fmt(monthly)}</div></div>
+      <div class="pipe-stat"><div class="label">Annual Projected</div><div class="value">${fmt(annual)}</div></div>`;
+    if (atRisk > 0) {
+      html += `<div class="pipe-stat highlight" style="grid-column:span 2"><div class="label">⚠ Revenue at Risk (CRM score below 60)</div><div class="value">${fmt(atRisk)}</div></div>`;
+    }
+    document.getElementById('pipelineResults').innerHTML = html;
+  }
+
+  const planContainer = document.getElementById('actionPlan');
+  planContainer.innerHTML = '';
+  [...categories].sort((a, b) => catScores[a] - catScores[b]).forEach(cat => {
+    const score = catScores[cat];
+    let status, rec;
+    if (score < 8) { status = 'var(--destructive)'; rec = actionRecs[cat].red; }
+    else if (score < 16) { status = 'var(--warning)'; rec = actionRecs[cat].yellow; }
+    else { status = 'var(--success)'; rec = actionRecs[cat].green; }
+    planContainer.innerHTML += `
+      <div class="action-item">
+        <div class="action-header">
+          <div class="action-status" style="background:${status}"></div>
+          <div class="action-title">${cat} — ${score}/20</div>
+        </div>
+        <div class="action-recs">${rec}</div>
+      </div>`;
+  });
+}
+</script>
+</body>
+</html>
