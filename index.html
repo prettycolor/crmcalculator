@@ -1494,13 +1494,21 @@ function applyTheme() {
   if (iconEl) iconEl.style.display = '';
 
   toggle.setAttribute('aria-label', aria);
-  toggle.setAttribute('aria-pressed', dark ? 'true' : 'false');
+  // Tri-state control: pressed = dark manual, unpressed = light manual, mixed = follow system (not "effective dark" — that caused double-clicks when system→light matched OS light).
+  const pressed =
+    themePreference === 'dark' ? 'true' : themePreference === 'light' ? 'false' : 'mixed';
+  toggle.setAttribute('aria-pressed', pressed);
 }
 
 function cycleTheme() {
-  if (themePreference === 'system') themePreference = 'light';
-  else if (themePreference === 'light') themePreference = 'dark';
-  else themePreference = 'system';
+  // From system, jump to the *opposite* of the current effective appearance so one click always flips light/dark pixels (system→light was a no-op when OS was already light).
+  if (themePreference === 'system') {
+    themePreference = isEffectiveDark() ? 'light' : 'dark';
+  } else if (themePreference === 'light') {
+    themePreference = 'dark';
+  } else {
+    themePreference = 'system';
+  }
   try { localStorage.setItem(THEME_KEY, themePreference); } catch (e) { /* ignore */ }
   applyTheme();
 }

@@ -8,7 +8,7 @@ Design tokens mirror the Okay-Babe design system (`colors_and_type.css`): **Warm
 
 - **System** (default): follows **`prefers-color-scheme`**.
 - **Light** / **Dark**: forced modes, persisted in **`localStorage`** under **`crmcalc-theme`** (`light` | `dark` | `system`).
-- Use the header **theme** control (cycles system → light → dark). `html` uses **`color-scheme: light dark`** for native form controls.
+- Use the header **theme** control: cycles **light → dark → system**. When you are on **system** (follows the device), the next click switches to **explicit light or dark**—whichever is the **opposite** of the current page appearance—so the first click always does something visible. `html` uses **`color-scheme: light dark`** for native form controls.
 
 ### Accessibility (brief)
 
