@@ -724,9 +724,193 @@ body {
     transition: none;
   }
 }
+
+/* ── Inline icons (emoji replacements) ── */
+.intro-features .check svg {
+  width: 12px;
+  height: 12px;
+  display: block;
+}
+.benchmark .bench-icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  color: hsl(var(--muted-foreground));
+}
+.benchmark .bench-icon svg {
+  width: 16px;
+  height: 16px;
+}
+.pipe-warn-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.pipe-warn-label svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  color: hsl(var(--destructive));
+}
+
+/* ── Resume + share (screen only) ── */
+.resume-banner {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 10px 16px;
+  padding: 12px 16px;
+  background: hsl(var(--surface-elevated));
+  border-bottom: 1px solid hsl(var(--border));
+  font-family: var(--font-sans);
+  font-size: 14px;
+  color: hsl(var(--foreground));
+}
+.resume-banner p { margin: 0; }
+.resume-banner-actions {
+  display: flex;
+  gap: 8px;
+}
+.resume-btn {
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid hsl(var(--border));
+  background: hsl(var(--surface));
+  color: hsl(var(--foreground));
+}
+.resume-btn:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+}
+.resume-btn-primary {
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  border-color: transparent;
+}
+.resume-btn-primary:hover { background: hsl(var(--primary-hover)); }
+
+.share-footer {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid hsl(var(--border));
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+}
+.share-btn {
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid hsl(var(--border));
+  background: hsl(var(--surface));
+  color: hsl(var(--foreground));
+}
+.share-btn:hover {
+  border-color: hsl(var(--primary));
+  background: hsl(var(--primary-dim));
+}
+.share-btn:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+}
+.share-hint {
+  font-size: 13px;
+  color: hsl(var(--muted-foreground));
+}
+
+@media print {
+  .no-print { display: none !important; }
+  html {
+    color-scheme: light;
+  }
+  body {
+    background: #fff !important;
+    color: #111 !important;
+    min-height: 0;
+  }
+  .container {
+    max-width: none;
+    padding: 12px 16px 24px;
+  }
+  .brand h1 { color: #111 !important; }
+  .brand h1 span { color: #5b21b6 !important; }
+  .brand p { color: #444 !important; }
+  .intro-card,
+  .question-card,
+  .calc-card,
+  .results-card {
+    background: #fff !important;
+    border: 1px solid #ccc !important;
+    box-shadow: none !important;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  .cta-card {
+    display: none !important;
+  }
+  .action-item {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  .pipe-stat {
+    background: #f9f9f9 !important;
+    border: 1px solid #ddd !important;
+    break-inside: avoid;
+  }
+  .pipe-stat.highlight {
+    background: #fff5f5 !important;
+    border: 1px solid #e5a5a5 !important;
+  }
+  .score-ring {
+    border-color: #333 !important;
+  }
+  .score-ring .number { color: #111 !important; }
+  .grade-label {
+    border: 1px solid #ccc;
+  }
+  .cat-bar {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+  .fade-in {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .progress-fill,
+  .cat-bar,
+  .score-ring,
+  .grade-label,
+  .answer-btn,
+  .primary-btn,
+  .theme-toggle,
+  .input-group input {
+    transition: none !important;
+  }
+}
 </style>
 </head>
 <body>
+
+<div id="resumeBanner" class="resume-banner no-print" hidden role="region" aria-label="Saved progress prompt">
+  <p>Resume saved progress from this link?</p>
+  <div class="resume-banner-actions">
+    <button type="button" class="resume-btn resume-btn-primary" id="resumeAcceptBtn">Resume</button>
+    <button type="button" class="resume-btn" id="resumeDismissBtn">Dismiss</button>
+  </div>
+</div>
 
 <div class="container">
   <header class="site-header">
@@ -734,7 +918,7 @@ body {
       <h1>okay<span>babe</span></h1>
       <p>CRM Health Audit + Pipeline Calculator</p>
     </div>
-    <button type="button" class="theme-toggle" id="themeToggle" aria-pressed="false" aria-label="Theme: system. Press to use light mode." title="Cycle theme: system, light, dark">
+    <button type="button" class="theme-toggle no-print" id="themeToggle" aria-pressed="false" aria-label="Theme: system. Press to use light mode." title="Cycle theme: system, light, dark">
       <span class="visually-hidden" id="themeToggleText">Theme: system</span>
       <svg id="themeIconAuto" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
         <path d="M12 3v2M12 19v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M3 12h2M19 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
@@ -751,7 +935,7 @@ body {
   </header>
 
   <div
-    class="progress-wrap"
+    class="progress-wrap no-print"
     id="progressWidget"
     role="progressbar"
     aria-valuemin="0"
@@ -777,9 +961,9 @@ body {
       <h2 tabindex="-1" id="introHeading">Is your CRM costing you deals?</h2>
       <p>Score your sales operations across 5 categories, calculate your pipeline value, and get a personalized action plan.</p>
       <ul class="intro-features">
-        <li><span class="check">✓</span> 20-question CRM health scorecard</li>
-        <li><span class="check">✓</span> Pipeline value calculator with benchmarks</li>
-        <li><span class="check">✓</span> Personalized action plan for your biggest gaps</li>
+        <li><span class="check"><svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M3 8.5l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span> 20-question CRM health scorecard</li>
+        <li><span class="check"><svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M3 8.5l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span> Pipeline value calculator with benchmarks</li>
+        <li><span class="check"><svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M3 8.5l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span> Personalized action plan for your biggest gaps</li>
       </ul>
       <button type="button" class="primary-btn" onclick="startAudit()">Start My CRM Audit</button>
     </div>
@@ -835,7 +1019,7 @@ body {
         </div>
       </div>
       <div class="benchmark">
-        <span aria-hidden="true">📊</span>
+        <span class="bench-icon" aria-hidden="true"><svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="2" y="10" width="3" height="5" rx="0.5" fill="currentColor"/><rect x="6.5" y="6" width="3" height="9" rx="0.5" fill="currentColor"/><rect x="11" y="2" width="3" height="13" rx="0.5" fill="currentColor"/></svg></span>
         <span>Top SMB teams: 40% win rate · 30-day cycle · 60+ leads/month</span>
       </div>
       <button type="button" class="primary-btn" onclick="showResults()">See My Results</button>
@@ -878,10 +1062,19 @@ body {
     </div>
   </div>
   </main>
+
+  <footer class="share-footer no-print" id="shareFooter" hidden>
+    <button type="button" class="share-btn" id="copyLinkBtn">Copy link to resume later</button>
+    <span class="share-hint" id="copyLinkStatus" role="status" aria-live="polite"></span>
+  </footer>
 </div>
 
 <script>
 const THEME_KEY = 'crmcalc-theme';
+const STATE_HASH_PREFIX = 'v=1&d=';
+let answerHistory = [];
+let pendingRestorePayload = null;
+
 const questions = [
   { cat: "Data Hygiene", q: "Do you have a process for removing stale or inactive leads?" },
   { cat: "Data Hygiene", q: "Are contact records updated after every meaningful interaction?" },
@@ -920,6 +1113,182 @@ const actionRecs = {
 let currentQ = 0;
 let themePreference = 'system';
 let mediaQueryDark = null;
+
+function getActiveScreen() {
+  if (document.getElementById('screen-intro').classList.contains('active')) return 'intro';
+  if (document.getElementById('screen-questions').classList.contains('active')) return 'q';
+  if (document.getElementById('screen-calc').classList.contains('active')) return 'calc';
+  return 'res';
+}
+
+function rebuildScoresFromAnswers(ans) {
+  categories.forEach(c => { catScores[c] = 0; });
+  for (let i = 0; i < ans.length; i++) {
+    const q = questions[i];
+    if (q) catScores[q.cat] += ans[i];
+  }
+}
+
+function readCalcInputs() {
+  return {
+    deals: document.getElementById('calcDeals').value,
+    dealValue: document.getElementById('calcDealValue').value,
+    winRate: document.getElementById('calcWinRate').value,
+    cycle: document.getElementById('calcCycle').value,
+    leads: document.getElementById('calcLeads').value
+  };
+}
+
+function applyCalcInputs(c) {
+  if (!c || typeof c !== 'object') return;
+  const ids = { deals: 'calcDeals', dealValue: 'calcDealValue', winRate: 'calcWinRate', cycle: 'calcCycle', leads: 'calcLeads' };
+  Object.keys(ids).forEach(k => {
+    if (c[k] != null && c[k] !== '') {
+      const el = document.getElementById(ids[k]);
+      if (el) el.value = String(c[k]);
+    }
+  });
+}
+
+function clearCalcInputs() {
+  ['calcDeals', 'calcDealValue', 'calcWinRate', 'calcCycle', 'calcLeads'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+}
+
+function toBase64Url(obj) {
+  const s = JSON.stringify(obj);
+  const b = btoa(unescape(encodeURIComponent(s)));
+  return b.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+
+function fromBase64Url(str) {
+  let b = str.replace(/-/g, '+').replace(/_/g, '/');
+  while (b.length % 4) b += '=';
+  const json = decodeURIComponent(escape(atob(b)));
+  return JSON.parse(json);
+}
+
+function validatePayload(p) {
+  if (!p || p.v !== 1) return false;
+  const modes = ['intro', 'q', 'calc', 'res'];
+  if (modes.indexOf(p.m) === -1) return false;
+  if (!Array.isArray(p.a)) return false;
+  if (p.a.length > 20) return false;
+  for (let i = 0; i < p.a.length; i++) {
+    if ([0, 3, 5].indexOf(p.a[i]) === -1) return false;
+  }
+  if (p.m === 'intro' && p.a.length !== 0) return false;
+  if (p.m === 'q' && p.a.length >= 20) return false;
+  if ((p.m === 'calc' || p.m === 'res') && p.a.length !== 20) return false;
+  if (p.c != null && typeof p.c !== 'object') return false;
+  return true;
+}
+
+function getSharePayload() {
+  return {
+    v: 1,
+    m: getActiveScreen(),
+    a: answerHistory.slice(),
+    c: readCalcInputs()
+  };
+}
+
+function clearStateHashFromUrl() {
+  const u = new URL(location.href);
+  u.hash = '';
+  history.replaceState(null, '', u);
+}
+
+function hideResumeBanner() {
+  const b = document.getElementById('resumeBanner');
+  if (b) b.hidden = true;
+}
+
+function showResumeBanner() {
+  const b = document.getElementById('resumeBanner');
+  if (b) b.hidden = false;
+}
+
+function applyPayload(p) {
+  if (!validatePayload(p)) return;
+  answerHistory = p.a.slice();
+  rebuildScoresFromAnswers(answerHistory);
+  if (p.m !== 'intro') applyCalcInputs(p.c);
+  if (p.m === 'intro') {
+    clearCalcInputs();
+    currentQ = 0;
+    updateProgress(0, 22, 'Start');
+    show('screen-intro');
+  } else if (p.m === 'q') {
+    currentQ = answerHistory.length;
+    updateProgress(currentQ + 1, 22, questions[currentQ] ? questions[currentQ].cat : 'Audit');
+    show('screen-questions');
+    renderQuestion();
+  } else if (p.m === 'calc') {
+    currentQ = 20;
+    updateProgress(21, 22, 'Pipeline Calculator');
+    show('screen-calc');
+    requestAnimationFrame(() => focusEl(document.getElementById('calcCard')));
+  } else {
+    currentQ = 20;
+    showResults();
+  }
+  hideResumeBanner();
+  updateShareFooterVisibility();
+}
+
+function tryConsumeHashOnLoad() {
+  const rawHash = location.hash.replace(/^#/, '');
+  if (!rawHash.startsWith(STATE_HASH_PREFIX)) return;
+  const enc = rawHash.slice(STATE_HASH_PREFIX.length);
+  let payload;
+  try {
+    payload = fromBase64Url(enc);
+  } catch (e) {
+    return;
+  }
+  if (!validatePayload(payload)) return;
+
+  const u = new URL(location.href);
+  if (u.searchParams.get('restore') === '1') {
+    applyPayload(payload);
+    u.searchParams.delete('restore');
+    u.hash = '';
+    history.replaceState(null, '', u);
+    return;
+  }
+
+  pendingRestorePayload = payload;
+  showResumeBanner();
+}
+
+function updateShareFooterVisibility() {
+  const foot = document.getElementById('shareFooter');
+  if (!foot) return;
+  const mode = getActiveScreen();
+  const visible = answerHistory.length > 0 || mode === 'calc' || mode === 'res';
+  foot.hidden = !visible;
+}
+
+async function copyResumeLink() {
+  const status = document.getElementById('copyLinkStatus');
+  const payload = getSharePayload();
+  if (!validatePayload(payload)) {
+    if (status) status.textContent = 'Nothing to save yet.';
+    return;
+  }
+  const u = new URL(location.href);
+  u.hash = STATE_HASH_PREFIX + toBase64Url(payload);
+  const text = u.toString();
+  try {
+    await navigator.clipboard.writeText(text);
+    if (status) status.textContent = 'Link copied. Data is only in the URL — avoid sharing sensitive answers.';
+  } catch (e) {
+    if (status) status.textContent = 'Copy failed — select and copy the address bar after adding the link.';
+  }
+}
 
 function getStoredTheme() {
   try {
@@ -997,6 +1366,7 @@ function initTheme() {
 function show(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
+  updateShareFooterVisibility();
 }
 
 function updateProgress(step, total, label) {
@@ -1017,6 +1387,9 @@ function focusEl(el) {
 }
 
 function startAudit() {
+  currentQ = 0;
+  answerHistory = [];
+  categories.forEach(c => { catScores[c] = 0; });
   show('screen-questions');
   renderQuestion();
   requestAnimationFrame(() => focusEl(document.getElementById('questionCard')));
@@ -1036,6 +1409,7 @@ function renderQuestion() {
 }
 
 function answer(val) {
+  answerHistory.push(val);
   catScores[questions[currentQ].cat] += val;
   currentQ++;
   if (currentQ < 20) { renderQuestion(); }
@@ -1126,7 +1500,8 @@ function showResults() {
       <div class="pipe-stat"><div class="label">Monthly Projected</div><div class="value">${fmt(monthly)}</div></div>
       <div class="pipe-stat"><div class="label">Annual Projected</div><div class="value">${fmt(annual)}</div></div>`;
     if (atRisk > 0) {
-      html += `<div class="pipe-stat highlight" style="grid-column:span 2"><div class="label">⚠ Revenue at Risk (CRM score below 60)</div><div class="value">${fmt(atRisk)}</div></div>`;
+      const warnIcon = '<svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M8 2.5L14.5 13h-13L8 2.5z" stroke="currentColor" stroke-width="1.25" stroke-linejoin="round"/><path d="M8 6v3.25M8 11.2h.01" stroke="currentColor" stroke-width="1.25" stroke-linecap="round"/></svg>';
+      html += `<div class="pipe-stat highlight" style="grid-column:span 2"><div class="label pipe-warn-label">${warnIcon}<span>Revenue at Risk (CRM score below 60)</span></div><div class="value">${fmt(atRisk)}</div></div>`;
     }
     document.getElementById('pipelineResults').innerHTML = html;
   } else {
@@ -1157,6 +1532,29 @@ function showResults() {
 
 initTheme();
 updateProgress(0, 22, 'Start');
+
+(function initShareAndRestore() {
+  const accept = document.getElementById('resumeAcceptBtn');
+  const dismiss = document.getElementById('resumeDismissBtn');
+  const copyBtn = document.getElementById('copyLinkBtn');
+  if (accept) {
+    accept.addEventListener('click', () => {
+      if (pendingRestorePayload) applyPayload(pendingRestorePayload);
+      pendingRestorePayload = null;
+      clearStateHashFromUrl();
+    });
+  }
+  if (dismiss) {
+    dismiss.addEventListener('click', () => {
+      pendingRestorePayload = null;
+      hideResumeBanner();
+      clearStateHashFromUrl();
+    });
+  }
+  if (copyBtn) copyBtn.addEventListener('click', () => { copyResumeLink(); });
+  tryConsumeHashOnLoad();
+  updateShareFooterVisibility();
+})();
 </script>
 </body>
 </html>

@@ -18,6 +18,12 @@ Design tokens mirror the Okay-Babe design system (`colors_and_type.css`): **Warm
 - **Forms**: calculator fields pair **`label for`** with **`input id`**; focus rings use **`:focus-visible`**.
 - **Motion**: animations and width/color transitions on the progress bar, category bars, and score ring are reduced when **`prefers-reduced-motion: reduce`** is set.
 
+### Phase 2 polish
+
+- **Icons**: checklist, benchmark, and pipeline warning use **inline SVG** with `currentColor` / theme tokens (no emoji), with `aria-hidden="true"` where the adjacent text carries the meaning.
+- **Print**: **`@media print`** forces a light, toner-friendly page (white background, dark text), hides the theme toggle, progress bar, resume banner, and share footer, avoids awkward breaks inside score/action cards, and skips the beta CTA strip. Category bars request **`print-color-adjust: exact`** so the chart colors survive printing when supported.
+- **Shareable state (hash only)**: After you have progress, **Copy link to resume later** encodes answers + calculator field values in the **URL fragment** as `#v=1&d=<base64url(JSON)>`, not query parameters (reduces accidental referrer leakage). **No server** — anyone with the link can read the payload. **Do not share sensitive answers** in links. Opening a link with a valid hash shows a **“Resume saved progress?”** banner (Resume / Dismiss). Append **`?restore=1`** to the URL to **restore immediately** without the banner (useful for bookmarks). Dismiss clears the hash from the address bar.
+
 ## Run locally
 
 Open the file in a browser:
