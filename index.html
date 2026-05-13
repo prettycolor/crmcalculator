@@ -1370,6 +1370,7 @@ function showResumePrompt() {
   const el = document.getElementById('resumePrompt');
   if (el) el.hidden = false;
   updateShareFooterVisibility();
+  notifyParentResizeSoon();
 }
 
 function applyPayload(p) {
@@ -1820,10 +1821,12 @@ updateProgress(0, getProgressTotal(), 'Start');
   const copyBtn = document.getElementById('copyLinkBtn');
   if (accept) {
     accept.addEventListener('click', () => {
-      const p = pendingRestorePayload;
+      if (pendingRestorePayload) {
+        applyPayload(pendingRestorePayload);
+      } else {
+        hideResumePrompt();
+      }
       pendingRestorePayload = null;
-      if (p) applyPayload(p);
-      else hideResumePrompt();
       clearStateHashFromUrl();
     });
   }
@@ -1833,6 +1836,7 @@ updateProgress(0, getProgressTotal(), 'Start');
       hideResumePrompt();
       clearStateHashFromUrl();
       updateShareFooterVisibility();
+      notifyParentResizeSoon();
     });
   }
   if (copyBtn) copyBtn.addEventListener('click', () => { copyResumeLink(); });
