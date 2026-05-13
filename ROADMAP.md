@@ -18,7 +18,7 @@
 - **Status:** Shipped in repo — **15** audit questions (was 20), five categories × three items each; max raw score **75**; grades and “revenue at risk” use **the same percentage cutoffs** as the old 0–100 scale.
 - **Spec:** [`docs/2026-05-13-crm-audit-question-research.md`](docs/2026-05-13-crm-audit-question-research.md) (Exa-backed rationale, coverage matrix, scoring).
 - **Implementation plan:** [`docs/superpowers/plans/2026-05-13-crm-audit-question-bank-v2.md`](docs/superpowers/plans/2026-05-13-crm-audit-question-bank-v2.md).
-- **Results transparency:** Score card includes on-page methodology + privacy (`#scoreMethodology`) so visitors understand scoring and data handling.
+- **Results transparency:** Score card includes on-page methodology (`#scoreMethodology`) so visitors understand scoring and limitations.
 - **Share links:** New copies use `#v=2&d=…` with `v: 2` in the JSON payload. **`#v=1&d=…` links with 20 answers remain valid** for restore.
 
 ## In-repo maintenance

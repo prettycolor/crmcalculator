@@ -597,7 +597,7 @@ body {
   margin: 0 0 14px;
 }
 .methodology-list {
-  margin: 0 0 16px;
+  margin: 0;
   padding-left: 1.15rem;
   font-family: var(--font-sans);
   font-size: 13px;
@@ -610,36 +610,6 @@ body {
   font-weight: 600;
   color: hsl(var(--foreground));
 }
-.methodology-details {
-  font-family: var(--font-sans);
-  font-size: 13px;
-  line-height: 1.55;
-  color: hsl(var(--muted-foreground));
-  border-radius: 8px;
-  border: 1px solid hsl(var(--border));
-  background: hsl(var(--background));
-  padding: 0 12px;
-}
-.methodology-summary {
-  cursor: pointer;
-  font-weight: 500;
-  color: hsl(var(--foreground));
-  padding: 12px 4px;
-  list-style-position: outside;
-}
-.methodology-details[open] { padding-bottom: 4px; }
-.methodology-details-inner {
-  padding: 0 4px 12px;
-  border-top: 1px solid hsl(var(--border));
-}
-.methodology-details-inner p {
-  margin: 12px 0 8px;
-}
-.methodology-details-inner ul {
-  margin: 0;
-  padding-left: 1.1rem;
-}
-.methodology-details-inner li { margin-bottom: 6px; }
 
 /* ── PIPELINE RESULTS ── */
 .pipeline-results { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
@@ -1024,13 +994,6 @@ html.embed .container {
   .score-methodology {
     border-top-color: #ccc !important;
   }
-  .methodology-details {
-    background: #fafafa !important;
-    border-color: #ccc !important;
-  }
-  .methodology-details-inner {
-    border-top-color: #ddd !important;
-  }
   .fade-in {
     animation: none !important;
     opacity: 1 !important;
@@ -1221,16 +1184,6 @@ html.embed .container {
           <li><span class="methodology-term">Pipeline block.</span> If shown below, dollar figures use the calculator inputs <strong>you entered</strong>. They are separate from the audit score and are not read from your CRM.</li>
           <li><span class="methodology-term">Honesty.</span> This is a self-assessment, not a certification, vendor audit, or peer benchmark—answer how things really work today to get the most useful plan.</li>
         </ul>
-        <details class="methodology-details">
-          <summary class="methodology-summary">Privacy and how this page uses data</summary>
-          <div class="methodology-details-inner">
-            <p>Scoring runs in your browser. okaybabe does not send your question answers through our servers to compute this score.</p>
-            <ul>
-              <li><strong>Resume link.</strong> “Copy link to resume later” encodes your answers in the URL fragment (<code>#v=2&amp;d=…</code>). Anyone with the link can load that payload—do not share if it is sensitive.</li>
-              <li><strong>Optional email step.</strong> If you opened this page with <code>?gate=1</code>, email and team size may be posted only to the endpoint your host configures (<code>CRM_CALC_SUBMIT_ENDPOINT</code>); they are not stored in the share link by default.</li>
-            </ul>
-          </div>
-        </details>
       </section>
     </div>
 

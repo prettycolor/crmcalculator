@@ -14,7 +14,7 @@ Design tokens mirror the Okay-Babe design system (`colors_and_type.css`): **Warm
 
 - **Landmarks**: `<header>` (brand + theme), `<main>` for the wizard.
 - **Progress**: the step indicator is a **`role="progressbar"`** with `aria-valuenow` / `aria-valuemax` / `aria-valuetext` updated from script.
-- **Results**: an **`aria-live="polite"`** region announces score, grade, and a one-line summary when results render. The first results card includes a **“How this score works”** section (scoring rules, grade bands, pipeline vs audit) plus an expandable **privacy / data** note (browser-only scoring, resume link in URL fragment, optional `?gate=1` POST).
+- **Results**: an **`aria-live="polite"`** region announces score, grade, and a one-line summary when results render. The first results card includes a **“How this score works”** section (scoring rules, grade bands, pipeline vs audit, limitations). Hash resume behavior and optional gate POST are documented under Phase 2 / Phase 3 below.
 - **Forms**: calculator fields pair **`label for`** with **`input id`**; focus rings use **`:focus-visible`**.
 - **Motion**: animations and width/color transitions on the progress bar, category bars, and score ring are reduced when **`prefers-reduced-motion: reduce`** is set.
 
