@@ -22,7 +22,60 @@ Design tokens mirror the Okay-Babe design system (`colors_and_type.css`): **Warm
 
 - **Icons**: checklist, benchmark, and pipeline warning use **inline SVG** with `currentColor` / theme tokens (no emoji), with `aria-hidden="true"` where the adjacent text carries the meaning.
 - **Print**: **`@media print`** forces a light, toner-friendly page (white background, dark text), hides the theme toggle, progress bar, resume banner, and share footer, avoids awkward breaks inside score/action cards, and skips the beta CTA strip. Category bars request **`print-color-adjust: exact`** so the chart colors survive printing when supported.
-- **Shareable state (hash only)**: After you have progress, **Copy link to resume later** encodes answers + calculator field values in the **URL fragment** as `#v=1&d=<base64url(JSON)>`, not query parameters (reduces accidental referrer leakage). **No server** — anyone with the link can read the payload. **Do not share sensitive answers** in links. Opening a link with a valid hash shows a **“Resume saved progress?”** banner (Resume / Dismiss). Append **`?restore=1`** to the URL to **restore immediately** without the banner (useful for bookmarks). Dismiss clears the hash from the address bar.
+- **Shareable state (hash only)**: After you have progress, **Copy link to resume later** encodes answers + calculator field values in the **URL fragment** as `#v=1&d=<base64url(JSON)>`, not query parameters (reduces accidental referrer leakage). **No server** — anyone with the link can read the payload. **Do not share sensitive answers** in links. Opening a link with a valid hash shows a **“Resume saved progress?”** banner (Resume / Dismiss). Append **`?restore=1`** to the URL to **restore immediately** without the banner (useful for bookmarks). Dismiss clears the hash from the address bar. Saved state can include mode **`gate`** when **`?gate=1`** was used; restoring a gate snapshot requires the same query flag.
+
+### Phase 3 — embed, email gate, analytics hook
+
+**Query flags**
+
+| Param | Values | Purpose |
+|-------|--------|---------|
+| `embed` | `1` or `true` | Minimal chrome (`html.embed`, header hidden). Enables `postMessage` resize pings to parent. |
+| `theme` | `dark` \| `light` \| `system` | Overrides `localStorage` theme for this load (iframe-friendly when `prefers-color-scheme` is wrong). Hides the header theme toggle when set. |
+| `gate` | `1` | Enables the **Almost there** email + team-size step after the pipeline form and before results. **Off by default** so existing share links behave the same. |
+
+**Parent page: iframe + auto height**
+
+The calculator sends `postMessage` to `parent` (only when `embed=1`):
+
+```json
+{ "type": "crmcalc-resize", "height": 1234 }
+```
+
+- Fires on load, on step changes, and on window resize (**debounced ~100ms**).
+- Height is `Math.ceil(document.documentElement.scrollHeight)`.
+
+Example host page (vanilla JS):
+
+```html
+<iframe id="crmcalc" title="CRM Health Audit" src="https://YOUR_HOST/index.html?embed=1&theme=system" style="width:100%;border:0;display:block"></iframe>
+<script>
+window.addEventListener('message', function (e) {
+  var d = e.data;
+  if (!d || d.type !== 'crmcalc-resize' || typeof d.height !== 'number') return;
+  // Optional: verify e.origin === 'https://YOUR_HOST'
+  var el = document.getElementById('crmcalc');
+  if (el) el.style.height = d.height + 'px';
+});
+</script>
+```
+
+**CSP / framing**
+
+- **Calculator origin**: Serve with a restrictive `Content-Security-Policy` as needed; for embedding on okaybabe.co you may use `Content-Security-Policy: frame-ancestors https://okaybabe.co https://www.okaybabe.co` (adjust hosts).
+- **Marketing site**: Allow the calculator origin in `frame-src` (or default-src) so the iframe loads.
+
+**Email gate + lead POST (no secrets in repo)**
+
+- With **`?gate=1`**, users see **Almost there** (required email, required team-size band) before results. Data is stored in **`sessionStorage`** (`crmcalc-gate-lead`, `crmcalc-gate-done`) for the tab session; **not** embedded in the URL hash (PII stays out of shared links).
+- **Skip (internal testing)** bypasses validation and still shows results.
+- Optional: set **`window.CRM_CALC_SUBMIT_ENDPOINT`** (string URL) before or after load. On successful validation, the app `POST`s JSON: `{ email, teamSize, calc, scoreTotal, source: 'crm-calculator' }`. If unset, the app logs a **`console.info`** stub and continues (demo/offline safe).
+- Production wiring belongs in your host app or API (e.g. Resend, server action): keep API keys only in server environment variables.
+
+**Analytics placeholder**
+
+- The page defines **`window.crmcalcTrack(event, payload)`** if missing — default body is a **`/* CONFIGURE */`** no-op (no network).
+- Called with **`email_submit`** (payload avoids raw email in the hook; use server endpoint for PII), **`results_view`** (`scoreTotal`, `gradeBand`), and **`gate_skip`**.
 
 ## Run locally
 

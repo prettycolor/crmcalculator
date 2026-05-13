@@ -830,6 +830,70 @@ body {
   color: hsl(var(--muted-foreground));
 }
 
+/* ── Embed (parent iframe): minimal chrome ── */
+html.embed .site-header {
+  display: none;
+}
+html.embed .container {
+  padding-top: 16px;
+}
+
+/* ── Email gate ── */
+.gate-hint {
+  font-size: 14px;
+  color: hsl(var(--muted-foreground));
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+.input-group select {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid hsl(var(--border));
+  border-radius: 8px;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  color: hsl(var(--foreground));
+  background: hsl(var(--background));
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.input-group select:focus-visible {
+  border-color: hsl(var(--primary));
+  box-shadow: 0 0 0 3px hsl(var(--primary-dim));
+}
+.gate-error {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: hsl(var(--destructive));
+  margin-top: 8px;
+  min-height: 1.25em;
+}
+.gate-actions {
+  margin-top: 8px;
+}
+.gate-skip {
+  display: block;
+  width: 100%;
+  margin-top: 12px;
+  padding: 10px;
+  border: none;
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: hsl(var(--muted-foreground));
+  text-decoration: underline;
+  cursor: pointer;
+  text-align: center;
+}
+.gate-skip:hover {
+  color: hsl(var(--foreground));
+}
+.gate-skip:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
 @media print {
   .no-print { display: none !important; }
   html {
@@ -943,6 +1007,7 @@ body {
     aria-valuenow="0"
     aria-label="Audit progress"
     aria-valuetext="Start, step 0 of 22"
+    data-crmcalc-progress
   >
     <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
     <div class="progress-label">
@@ -955,7 +1020,7 @@ body {
 
   <main id="main-content">
   <!-- SCREEN: INTRO -->
-  <div class="screen active" id="screen-intro">
+  <div class="screen active" id="screen-intro" data-crmcalc-step="intro">
     <div class="intro-card fade-in">
       <div class="time-badge">Takes 4 minutes</div>
       <h2 tabindex="-1" id="introHeading">Is your CRM costing you deals?</h2>
@@ -970,7 +1035,7 @@ body {
   </div>
 
   <!-- SCREEN: QUESTIONS -->
-  <div class="screen" id="screen-questions">
+  <div class="screen" id="screen-questions" data-crmcalc-step="questions">
     <div class="question-card fade-in" id="questionCard" tabindex="-1">
       <div class="category-label" id="catLabel"></div>
       <div class="question-number" id="qNumber"></div>
@@ -990,7 +1055,7 @@ body {
   </div>
 
   <!-- SCREEN: CALCULATOR -->
-  <div class="screen" id="screen-calc">
+  <div class="screen" id="screen-calc" data-crmcalc-step="calc">
     <div class="calc-card fade-in" id="calcCard" tabindex="-1">
       <h2 id="calcHeading">Now, your pipeline numbers</h2>
       <p>Enter 5 numbers. We'll calculate what your pipeline is actually worth — and what you're leaving on the table.</p>
@@ -1022,12 +1087,41 @@ body {
         <span class="bench-icon" aria-hidden="true"><svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="2" y="10" width="3" height="5" rx="0.5" fill="currentColor"/><rect x="6.5" y="6" width="3" height="9" rx="0.5" fill="currentColor"/><rect x="11" y="2" width="3" height="13" rx="0.5" fill="currentColor"/></svg></span>
         <span>Top SMB teams: 40% win rate · 30-day cycle · 60+ leads/month</span>
       </div>
-      <button type="button" class="primary-btn" onclick="showResults()">See My Results</button>
+      <button type="button" class="primary-btn" data-crmcalc-action="calc-submit" onclick="onCalcSubmit()">See My Results</button>
+    </div>
+  </div>
+
+  <!-- SCREEN: EMAIL GATE (optional: ?gate=1) -->
+  <div class="screen" id="screen-gate" data-crmcalc-step="gate">
+    <div class="calc-card fade-in" id="gateCard" tabindex="-1">
+      <h2 id="gateHeading">Almost there</h2>
+      <p class="gate-hint">Share your email and team size so we can tailor follow-up. You’ll see your full results next.</p>
+      <div class="input-group">
+        <label for="gateEmail">Work email</label>
+        <input type="email" id="gateEmail" name="email" autocomplete="email" inputmode="email" placeholder="you@company.com" required>
+      </div>
+      <div class="input-group">
+        <label for="gateTeamSize">Team size (sales + rev ops)</label>
+        <select id="gateTeamSize" name="team_size" aria-describedby="gateTeamHint">
+          <option value="" disabled selected>Select range</option>
+          <option value="1">Just me</option>
+          <option value="2-5">2–5</option>
+          <option value="6-20">6–20</option>
+          <option value="21-50">21–50</option>
+          <option value="51+">51+</option>
+        </select>
+        <p id="gateTeamHint" class="visually-hidden">Choose the band that best matches your revenue-facing headcount.</p>
+      </div>
+      <p id="gateError" class="gate-error" role="alert" aria-live="polite"></p>
+      <div class="gate-actions">
+        <button type="button" class="primary-btn" data-crmcalc-action="gate-submit" onclick="submitGate()">See my results</button>
+        <button type="button" class="gate-skip" onclick="skipGate()">Skip (internal testing)</button>
+      </div>
     </div>
   </div>
 
   <!-- SCREEN: RESULTS -->
-  <div class="screen" id="screen-results">
+  <div class="screen" id="screen-results" data-crmcalc-step="results">
     <div class="results-card fade-in" id="resultsScoreCard" tabindex="-1">
       <h2 id="resultsHeading">Your CRM Health Score</h2>
       <p class="sub">Based on your 20 answers across 5 categories</p>
@@ -1070,10 +1164,63 @@ body {
 </div>
 
 <script>
+(function initAnalyticsHook() {
+  if (typeof window.crmcalcTrack !== 'function') {
+    window.crmcalcTrack = function(event, payload) {
+      /* CONFIGURE: wire Segment / Meta / Google Analytics here — do not commit real pixel or measurement IDs */
+    };
+  }
+})();
+
+const CRM_CALC_SEARCH = new URLSearchParams(location.search);
+function isEmbedMode() {
+  const v = CRM_CALC_SEARCH.get('embed');
+  return v === '1' || v === 'true';
+}
+function isGateEnabled() {
+  return CRM_CALC_SEARCH.get('gate') === '1';
+}
+function getProgressTotal() {
+  return isGateEnabled() ? 23 : 22;
+}
+function syncProgressAriaMax() {
+  const w = document.getElementById('progressWidget');
+  const t = getProgressTotal();
+  if (w) w.setAttribute('aria-valuemax', String(t));
+}
+
+let resizeNotifyTimer = null;
+function notifyParentResize() {
+  if (!isEmbedMode()) return;
+  const height = Math.ceil(document.documentElement.scrollHeight);
+  try {
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage({ type: 'crmcalc-resize', height }, '*');
+    }
+  } catch (e) { /* cross-origin or detached */ }
+}
+function notifyParentResizeSoon() {
+  requestAnimationFrame(() => notifyParentResize());
+}
+function notifyParentResizeDebounced() {
+  if (!isEmbedMode()) return;
+  clearTimeout(resizeNotifyTimer);
+  resizeNotifyTimer = setTimeout(notifyParentResize, 100);
+}
+
 const THEME_KEY = 'crmcalc-theme';
 const STATE_HASH_PREFIX = 'v=1&d=';
+const GATE_DONE_KEY = 'crmcalc-gate-done';
+const GATE_LEAD_KEY = 'crmcalc-gate-lead';
 let answerHistory = [];
 let pendingRestorePayload = null;
+
+if (isEmbedMode()) {
+  document.documentElement.classList.add('embed');
+}
+syncProgressAriaMax();
+window.addEventListener('resize', notifyParentResizeDebounced);
+window.addEventListener('load', () => notifyParentResizeSoon());
 
 const questions = [
   { cat: "Data Hygiene", q: "Do you have a process for removing stale or inactive leads?" },
@@ -1118,6 +1265,7 @@ function getActiveScreen() {
   if (document.getElementById('screen-intro').classList.contains('active')) return 'intro';
   if (document.getElementById('screen-questions').classList.contains('active')) return 'q';
   if (document.getElementById('screen-calc').classList.contains('active')) return 'calc';
+  if (document.getElementById('screen-gate').classList.contains('active')) return 'gate';
   return 'res';
 }
 
@@ -1172,7 +1320,7 @@ function fromBase64Url(str) {
 
 function validatePayload(p) {
   if (!p || p.v !== 1) return false;
-  const modes = ['intro', 'q', 'calc', 'res'];
+  const modes = ['intro', 'q', 'calc', 'gate', 'res'];
   if (modes.indexOf(p.m) === -1) return false;
   if (!Array.isArray(p.a)) return false;
   if (p.a.length > 20) return false;
@@ -1181,7 +1329,8 @@ function validatePayload(p) {
   }
   if (p.m === 'intro' && p.a.length !== 0) return false;
   if (p.m === 'q' && p.a.length >= 20) return false;
-  if ((p.m === 'calc' || p.m === 'res') && p.a.length !== 20) return false;
+  if ((p.m === 'calc' || p.m === 'gate' || p.m === 'res') && p.a.length !== 20) return false;
+  if (p.m === 'gate' && !isGateEnabled()) return false;
   if (p.c != null && typeof p.c !== 'object') return false;
   return true;
 }
@@ -1219,18 +1368,23 @@ function applyPayload(p) {
   if (p.m === 'intro') {
     clearCalcInputs();
     currentQ = 0;
-    updateProgress(0, 22, 'Start');
+    updateProgress(0, getProgressTotal(), 'Start');
     show('screen-intro');
   } else if (p.m === 'q') {
     currentQ = answerHistory.length;
-    updateProgress(currentQ + 1, 22, questions[currentQ] ? questions[currentQ].cat : 'Audit');
+    updateProgress(currentQ + 1, getProgressTotal(), questions[currentQ] ? questions[currentQ].cat : 'Audit');
     show('screen-questions');
     renderQuestion();
   } else if (p.m === 'calc') {
     currentQ = 20;
-    updateProgress(21, 22, 'Pipeline Calculator');
+    updateProgress(21, getProgressTotal(), 'Pipeline Calculator');
     show('screen-calc');
     requestAnimationFrame(() => focusEl(document.getElementById('calcCard')));
+  } else if (p.m === 'gate') {
+    currentQ = 20;
+    updateProgress(22, getProgressTotal(), 'Almost there');
+    show('screen-gate');
+    requestAnimationFrame(() => focusEl(document.getElementById('gateCard')));
   } else {
     currentQ = 20;
     showResults();
@@ -1268,7 +1422,7 @@ function updateShareFooterVisibility() {
   const foot = document.getElementById('shareFooter');
   if (!foot) return;
   const mode = getActiveScreen();
-  const visible = answerHistory.length > 0 || mode === 'calc' || mode === 'res';
+  const visible = answerHistory.length > 0 || mode === 'calc' || mode === 'gate' || mode === 'res';
   foot.hidden = !visible;
 }
 
@@ -1280,6 +1434,7 @@ async function copyResumeLink() {
     return;
   }
   const u = new URL(location.href);
+  if (payload.m === 'gate') u.searchParams.set('gate', '1');
   u.hash = STATE_HASH_PREFIX + toBase64Url(payload);
   const text = u.toString();
   try {
@@ -1351,7 +1506,12 @@ function cycleTheme() {
 }
 
 function initTheme() {
-  themePreference = getStoredTheme();
+  const urlTheme = CRM_CALC_SEARCH.get('theme');
+  if (urlTheme === 'dark' || urlTheme === 'light' || urlTheme === 'system') {
+    themePreference = urlTheme;
+  } else {
+    themePreference = getStoredTheme();
+  }
   applyTheme();
   if (window.matchMedia) {
     mediaQueryDark = window.matchMedia('(prefers-color-scheme: dark)');
@@ -1360,13 +1520,22 @@ function initTheme() {
     });
   }
   const btn = document.getElementById('themeToggle');
-  if (btn) btn.addEventListener('click', cycleTheme);
+  if (btn) {
+    const hideToggle = isEmbedMode() || urlTheme === 'dark' || urlTheme === 'light' || urlTheme === 'system';
+    if (hideToggle) {
+      btn.style.display = 'none';
+      btn.setAttribute('aria-hidden', 'true');
+    } else {
+      btn.addEventListener('click', cycleTheme);
+    }
+  }
 }
 
 function show(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   updateShareFooterVisibility();
+  notifyParentResizeSoon();
 }
 
 function updateProgress(step, total, label) {
@@ -1390,6 +1559,10 @@ function startAudit() {
   currentQ = 0;
   answerHistory = [];
   categories.forEach(c => { catScores[c] = 0; });
+  try {
+    sessionStorage.removeItem(GATE_DONE_KEY);
+    sessionStorage.removeItem(GATE_LEAD_KEY);
+  } catch (e) { /* ignore */ }
   show('screen-questions');
   renderQuestion();
   requestAnimationFrame(() => focusEl(document.getElementById('questionCard')));
@@ -1400,7 +1573,7 @@ function renderQuestion() {
   document.getElementById('catLabel').textContent = q.cat;
   document.getElementById('qNumber').textContent = 'Question ' + (currentQ + 1) + ' of 20';
   document.getElementById('qText').textContent = q.q;
-  updateProgress(currentQ + 1, 22, q.cat);
+  updateProgress(currentQ + 1, getProgressTotal(), q.cat);
   const card = document.getElementById('questionCard');
   card.classList.remove('fade-in');
   void card.offsetWidth;
@@ -1414,10 +1587,92 @@ function answer(val) {
   currentQ++;
   if (currentQ < 20) { renderQuestion(); }
   else {
-    updateProgress(21, 22, 'Pipeline Calculator');
+    updateProgress(21, getProgressTotal(), 'Pipeline Calculator');
     show('screen-calc');
     requestAnimationFrame(() => focusEl(document.getElementById('calcCard')));
   }
+}
+
+function gateAlreadyCompleted() {
+  try {
+    return sessionStorage.getItem(GATE_DONE_KEY) === '1';
+  } catch (e) {
+    return false;
+  }
+}
+
+function onCalcSubmit() {
+  if (isGateEnabled() && !gateAlreadyCompleted()) {
+    updateProgress(22, getProgressTotal(), 'Almost there');
+    show('screen-gate');
+    const err = document.getElementById('gateError');
+    if (err) err.textContent = '';
+    requestAnimationFrame(() => focusEl(document.getElementById('gateCard')));
+    return;
+  }
+  showResults();
+}
+
+function skipGate() {
+  if (typeof window.crmcalcTrack === 'function') {
+    window.crmcalcTrack('gate_skip', { step: 'gate' });
+  }
+  try {
+    sessionStorage.setItem(GATE_DONE_KEY, '1');
+  } catch (e) { /* ignore */ }
+  showResults();
+}
+
+function submitGate() {
+  const emailEl = document.getElementById('gateEmail');
+  const teamEl = document.getElementById('gateTeamSize');
+  const err = document.getElementById('gateError');
+  const email = emailEl ? emailEl.value.trim() : '';
+  const teamSize = teamEl ? teamEl.value : '';
+
+  if (!emailEl || !emailEl.checkValidity() || !email) {
+    if (err) err.textContent = 'Enter a valid work email.';
+    if (emailEl) emailEl.focus();
+    return;
+  }
+  if (!teamSize) {
+    if (err) err.textContent = 'Select a team size range.';
+    if (teamEl) teamEl.focus();
+    return;
+  }
+  if (err) err.textContent = '';
+
+  const lead = { email, teamSize, ts: Date.now() };
+  try {
+    sessionStorage.setItem(GATE_LEAD_KEY, JSON.stringify(lead));
+    sessionStorage.setItem(GATE_DONE_KEY, '1');
+  } catch (e) { /* ignore */ }
+
+  if (typeof window.crmcalcTrack === 'function') {
+    window.crmcalcTrack('email_submit', { teamSize });
+  }
+
+  const endpoint = typeof window.CRM_CALC_SUBMIT_ENDPOINT === 'string' ? window.CRM_CALC_SUBMIT_ENDPOINT.trim() : '';
+  if (endpoint) {
+    const calc = readCalcInputs();
+    const totalScore = Object.values(catScores).reduce((a, b) => a + b, 0);
+    const body = {
+      email,
+      teamSize,
+      calc,
+      scoreTotal: totalScore,
+      source: 'crm-calculator',
+    };
+    fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    }).catch(() => {});
+  } else {
+    console.info('[crmcalc] Lead capture: set window.CRM_CALC_SUBMIT_ENDPOINT to POST JSON leads (see README). Demo mode — continuing to results.');
+  }
+
+  showResults();
 }
 
 function showResults() {
@@ -1426,7 +1681,7 @@ function showResults() {
   const winRate = parseFloat(document.getElementById('calcWinRate').value) || 0;
   const cycle = parseFloat(document.getElementById('calcCycle').value) || 1;
 
-  updateProgress(22, 22, 'Your Results');
+  updateProgress(getProgressTotal(), getProgressTotal(), 'Your Results');
   show('screen-results');
 
   const total = Object.values(catScores).reduce((a, b) => a + b, 0);
@@ -1528,10 +1783,18 @@ function showResults() {
   });
 
   requestAnimationFrame(() => focusEl(document.getElementById('resultsScoreCard')));
+
+  if (typeof window.crmcalcTrack === 'function') {
+    window.crmcalcTrack('results_view', {
+      scoreTotal: total,
+      gradeBand: gradeClass.replace('grade-', ''),
+    });
+  }
+  notifyParentResizeSoon();
 }
 
 initTheme();
-updateProgress(0, 22, 'Start');
+updateProgress(0, getProgressTotal(), 'Start');
 
 (function initShareAndRestore() {
   const accept = document.getElementById('resumeAcceptBtn');
