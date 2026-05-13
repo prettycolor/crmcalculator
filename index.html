@@ -7,9 +7,9 @@
 <style>
 /* ═══════════════════════════════════════════════════
    okaybabe Design Tokens — Warm Zinc (Light Mode)
-   Source: okaybabe/src/styles/globals.css (:root @layer base)
+   Source: okaybabe™ Design System colors_and_type.css :root (Warm Zinc)
    60% zinc neutrals / 30% surface / 10% purple accent
-   Fonts: Soehne (display) · National 2 (body) · JetBrains Mono (mono)
+   Fonts: National 2 (display ≥20px) · Soehne (body) · JetBrains Mono (mono)
    ═══════════════════════════════════════════════════ */
 
 /* — Self-hosted woff2 (paths relative to this file) + local() fallback — */
@@ -37,7 +37,7 @@
   src: url('fonts/soehne-halbfett.woff2') format('woff2'),
        local('Soehne-Halbfett'), local('Soehne Halbfett'), local('Soehne-Kraftig'), local('Soehne Kraftig');
 }
-/* National 2 web bundle: medium serves both 400 + 500 body text */
+/* National 2: one medium master served at 400 + 500 for display weights */
 @font-face {
   font-family: 'National 2';
   font-style: normal;
@@ -95,23 +95,23 @@
   --border-strong: hsl(240, 5%, 83%);
   --border-subtle: hsl(240, 5%, 96%);
 
-  /* Semantic status — matches globals.css HSL → hex */
-  --success: #16A34A;
-  --success-bg: rgba(22, 163, 74, 0.08);
-  --warning: #EA580C;
-  --warning-bg: rgba(234, 88, 12, 0.08);
+  /* Semantic status — HSL triplets from design system → hex */
+  --success: #21C45D;
+  --success-bg: rgba(33, 196, 93, 0.08);
+  --warning: #F97415;
+  --warning-bg: rgba(249, 116, 21, 0.08);
   --destructive: #DC2626;
   --destructive-bg: rgba(220, 38, 38, 0.08);
-  --info: #2563EB;
-  --info-bg: rgba(37, 99, 235, 0.08);
+  --info: #3C83F6;
+  --info-bg: rgba(60, 131, 246, 0.08);
 
   /* Layout — base radius token (--radius-lg: 12px in canon) */
   --radius: 8px;
 
-  /* Typography — Soehne (display ≥20px) · National 2 (body <20px) · JetBrains Mono (metrics) */
-  --font-display: 'Soehne', system-ui, -apple-system, sans-serif;
-  --font-sans: 'National 2', system-ui, -apple-system, sans-serif;
-  --font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+  /* Typography — National 2 (display ≥20px) · Soehne (body) · JetBrains Mono (metrics) */
+  --font-display: 'National 2', 'Inter Tight', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-sans: 'Soehne', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -478,8 +478,8 @@ body {
 
 /* ── CTA ── */
 .cta-card {
-  background: hsl(240, 6%, 10%);
-  color: hsl(40, 20%, 98%);
+  background: var(--foreground);
+  color: var(--background);
   border-radius: var(--radius);
   padding: 32px; text-align: center;
   margin-top: 16px;
