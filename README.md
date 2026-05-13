@@ -2,7 +2,7 @@
 
 Interactive **okaybabe** marketing tool: a twenty-question CRM health audit (five categories), weighted scoring, a pipeline value calculator with benchmarks, and a results view with category breakdowns and prioritized actions. Everything ships as a single static **`index.html`** (inline CSS and JS).
 
-Design tokens follow the Okay-Babe **Warm Zinc** light palette (canonical `colors_and_type.css` :root HSL triplets → hex in `index.html`): brand purple, zinc neutrals, and semantic status colors.
+Design tokens mirror the Okay-Babe **Warm Zinc** light palette from canonical `colors_and_type.css`: `:root` stores **HSL triplets** (same values as the design system), and all color usage goes through `hsl(var(--token))` in CSS or in JS inline styles. Semantic **chart** aliases (`--chart-score-high` / `--chart-score-mid` / `--chart-score-low`) map to success / warning / destructive for category score bars.
 
 ## Run locally
 
