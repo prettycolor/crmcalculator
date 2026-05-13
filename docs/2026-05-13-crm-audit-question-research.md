@@ -86,6 +86,14 @@ Applied inline against research claims: no medical/legal overreach; question cou
 
 ---
 
+## Results methodology block (transparency copy, 2026)
+
+**Design intent (brainstorming):** Primary job is **trust + comprehension** before the pipeline and action-plan cards; secondary is reinforcing OkayBabe beta positioning **without** repeating the join CTA. Use **scannable bullets** plus **progressive disclosure** (`<details>`) for privacy/hash—aligned with mobile CRO guidance (short paragraphs, optional depth; e.g. [6th Man Digital — landing page conversion](https://www.6thman.digital/articles/how-to-design-winning-landingpages), [mobiledominate.com — progressive disclosure](https://mobiledominate.com/mobile-landing-page-best-practices-that-convert/)).
+
+**External patterns (Exa, indicative):** Maturity and audit experiences often add an FAQ or “how calculated” line (e.g. [Marketing Alchemists assessment FAQ](https://marketingalchemists.com/marketing-maturity-assessment/) — score range explained in plain language; [ActiveCampaign AI maturity quiz](http://activecampaign.com/lp/ai-maturity-quiz) — methodology paragraph; [WhatAreTheBest.com — methodology](https://whatarethebest.com/how-we-evaluate.cfm) — explicit limits of the framework). okaybabe copy stays **shorter** and **non-competitive** (no third‑party product scores).
+
+**Public copy guardrails:** No certification or peer benchmark claims; state self‑reported answers, 5/3/0 → max 75, letter grades from **percentage of max**; pipeline dollars **user‑entered**, separate from audit.
+
 ## Next steps
 
 See [implementation plan](superpowers/plans/2026-05-13-crm-audit-question-bank-v2.md) and [ROADMAP](../ROADMAP.md) “Question bank v2”.

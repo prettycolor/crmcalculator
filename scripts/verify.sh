@@ -14,6 +14,11 @@ if grep -qiE '20[\s-]*question' index.html README.md ROADMAP.md 2>/dev/null; the
   exit 1
 fi
 
+if ! grep -q 'id="scoreMethodology"' index.html || ! grep -q 'How this score works' index.html; then
+  echo "verify: FAIL — results methodology section missing (expected id scoreMethodology + heading)." >&2
+  exit 1
+fi
+
 python3 <<'PY'
 import re
 from pathlib import Path
