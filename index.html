@@ -7,7 +7,7 @@
 <style>
 /* ═══════════════════════════════════════════════════
    okaybabe Design Tokens — Warm Zinc (Light Mode)
-   Source: Ref-Design-Tokens wiki + brand fonts
+   Source: okaybabe/src/styles/globals.css (:root @layer base)
    60% zinc neutrals / 30% surface / 10% purple accent
    Fonts: Soehne (display) · National 2 (body) · JetBrains Mono (mono)
    ═══════════════════════════════════════════════════ */
@@ -95,9 +95,9 @@
   --border-strong: hsl(240, 5%, 83%);
   --border-subtle: hsl(240, 5%, 96%);
 
-  /* Status Colors — from Ref-Design-Tokens */
-  --success: #22C55E;
-  --success-bg: rgba(34, 197, 94, 0.08);
+  /* Semantic status — matches globals.css HSL → hex */
+  --success: #16A34A;
+  --success-bg: rgba(22, 163, 74, 0.08);
   --warning: #EA580C;
   --warning-bg: rgba(234, 88, 12, 0.08);
   --destructive: #DC2626;
@@ -105,8 +105,8 @@
   --info: #2563EB;
   --info-bg: rgba(37, 99, 235, 0.08);
 
-  /* Layout */
-  --radius: 12px;
+  /* Layout — base radius token (--radius-lg: 12px in canon) */
+  --radius: 8px;
 
   /* Typography — Soehne (display ≥20px) · National 2 (body <20px) · JetBrains Mono (metrics) */
   --font-display: 'Soehne', system-ui, -apple-system, sans-serif;
